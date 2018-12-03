@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@drawable/ic_favorite"
+        android:title="Home"/>
+    <item
+        android:id="@+id/nav_trending"
+        android:icon="@drawable/ic_favorite"
+        android:title="Trending"/>
+    <item
+        android:id="@+id/nav_latest"
+        android:icon="@drawable/ic_favorite"
+        android:title="Latest"/>
+    <item
+        android:id="@+id/nav_highlight"
+        android:icon="@drawable/ic_favorite"
+        android:title="Highlight"/>
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_favorite"
+        android:title="Settings"/>
+    <item
+        android:id="@+id/nav_help"
+        android:icon="@drawable/ic_favorite"
+        android:title="Help"/>
+</menu>

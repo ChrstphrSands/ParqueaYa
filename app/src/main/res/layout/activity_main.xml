@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/container"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_5">
+    tools:openDrawer="start">
 
-    <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/toolbar"/>
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:background="@color/blue_grey_700"
-        app:itemIconTint="@drawable/color_state_white_2"
-        app:itemTextColor="@drawable/color_state_white_2"
-        app:menu="@menu/menu_bottom_navigation_shifting" />
+    <include layout="@layout/navigation_layout"/>
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

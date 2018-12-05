@@ -1,39 +1,48 @@
 package com.example.parqueaya;
 
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.os.Bundle;
-
 import android.view.MenuItem;
 import android.view.View;
 import com.example.parqueaya.utils.Tools;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 
 public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView navigationView;
     private ActionBar actionBar;
     private Toolbar toolbar;
+    private GoogleMap mMap;
+
+    private boolean mPermissionDenied = false;
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initToolbar();
         initNavigationMenu();
         initBottomNavigation();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container, new MapFragment()).commit();
-    }
 
+
+
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.id.container, new MapsFragment()).commit();
+
+    }
 
     private void initToolbar() {
         toolbar = findViewById(R.id.toolbar);
@@ -112,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 actionBar.setTitle(item.getTitle());
                 break;
             case R.id.navigation_map:
-                fragmentClass = MapFragment.class;
+                fragmentClass = MapsFragment.class;
                 actionBar.setTitle(item.getTitle());
                 break;
         }
@@ -130,7 +139,9 @@ public class MainActivity extends AppCompatActivity {
         item.setChecked(true);
     }
 
-//    boolean isNavigationHide = false;
+
+
+    //    boolean isNavigationHide = false;
 //
 //    private void animateNavigation(boolean hide) {
 //        if (isNavigationHide && hide || !isNavigationHide && !hide) return;
@@ -157,4 +168,7 @@ public class MainActivity extends AppCompatActivity {
 //            this.finish();
 //        }
 //    }
+
+
+
 }

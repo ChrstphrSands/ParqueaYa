@@ -4,26 +4,41 @@ package com.example.parqueaya;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
+import android.location.*;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.bumptech.glide.RequestManager;
+import com.example.parqueaya.models.Cochera;
+import com.example.parqueaya.services.DataService;
 import com.example.parqueaya.utils.PermissionUtils;
 import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
@@ -33,15 +48,30 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private FloatingActionButton fabReserve;
     private Context context;
 
+    int location = -1;
+
+    LocationManager locationManager;
     private SupportMapFragment mapFragment;
     private MapView mMapView;
     private GoogleMap mMap;
+    private MarkerOptions userMarker;
 
     private boolean mPermissionDenied = false;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     public MapsFragment() {
         // Required empty public constructor
+    }
+
+    public static MapsFragment newInstance() {
+        MapsFragment fragment = new MapsFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        DataService.getInstance().getCocheras();
+        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -53,11 +83,42 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         fabReserve = view.findViewById(R.id.fab_reserve);
         fabReserve.setEnabled(false);
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+            .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
         initComponent(view);
-        showBottomSheet();
+//        showBottomSheet();
         showDetalleCochera(view);
         return view;
     }
+
+//    public void gettingLocationBasedOnApiVersion(GoogleMap mMap){
+//        if (location != -1 && location != 0) {
+//
+//            locationManager.removeUpdates(this);
+//
+//            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MainActivity.locations.get(location), 10));
+//            mMap.addMarker(new MarkerOptions().position(MainActivity.locations.get(location)).title(MainActivity.places.get(location)));
+//            mMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.locations.get(location)));
+//
+//            mMap.setOnMapLongClickListener(this);
+//        } else {
+//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                // TODO: Consider calling
+//                //    ActivityCompat#requestPermissions
+//                // here to request the missing permissions, and then overriding
+//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                //                                          int[] grantResults)
+//                // to handle the case where the user grants the permission. See the documentation
+//                // for ActivityCompat#requestPermissions for more details.
+//                return;
+//            }
+//            locationManager.requestLocationUpdates(provider, 400, 1, this);
+//        }
+//
+//        mMap.setOnMapLongClickListener(this);
+//    }
 
     private void initComponent(View view) {
         CoordinatorLayout llBottomSheet = view.findViewById(R.id.bottom_sheet);
@@ -94,14 +155,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showBottomSheet() {
-        mostrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                fabReserve.setEnabled(true);
-                textView.setText("Hola perro");
-            }
-        });
+//        mostrar.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+//                fabReserve.setEnabled(true);
+//                textView.setText("Hola perro");
+//            }
+//        });
     }
 
     private void showDetalleCochera(View view) {
@@ -172,6 +233,54 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+    }
 
+    public void setUserMarker(LatLng latLng) {
+        if (userMarker == null) {
+            userMarker = new MarkerOptions().position(latLng).title("Ubicacion actual");
+            mMap.addMarker(userMarker);
+            Log.v("Wiwi", "Latitud actual: " + latLng.latitude + " Long: " + latLng.longitude);
+        }
+
+        try {
+            Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude,latLng.longitude, 1);
+            updateMap(23000);
+        } catch (IOException exception){
+
+        }
+
+        updateMap(23000);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+    }
+
+    private void updateMap(int zipcode) {
+
+        List<Cochera> cocheras = DataService.getInstance().getCocheras();
+
+        for (int x = 0; x < cocheras.size(); x++) {
+            Cochera coch = cocheras.get(x);
+            Double lat = Double.valueOf(coch.getLatitud());
+            Double lng = Double.valueOf(coch.getLongitud());
+
+            Log.d("Latitud", String.valueOf(lat));
+            Log.d("Longitud", String.valueOf(lng));
+
+            MarkerOptions marker = new MarkerOptions().position(new LatLng(lat, lng));
+            marker.title(coch.getNombre());
+            marker.snippet(coch.getDescripcion());
+            marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin));
+            mMap.addMarker(marker);
+            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker mark) {
+                    if (mark.equals(mark)) {
+                        Marker marker1;
+                    }
+                    return false;
+                }
+            });
+        }
     }
 }

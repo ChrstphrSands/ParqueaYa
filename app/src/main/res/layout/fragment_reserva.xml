@@ -94,7 +94,8 @@
                             android:imeOptions="actionSearch"
                             android:clickable="true"
                             android:maxLines="1"
-                            android:singleLine="true">
+                            android:singleLine="true"
+                            android:id="@+id/reserva_hora_entrada">
 
                             <requestFocus/>
 
@@ -151,7 +152,8 @@
                             android:imeOptions="actionSearch"
                             android:editable="false"
                             android:maxLines="1"
-                            android:singleLine="true"/>
+                            android:singleLine="true"
+                            android:id="@+id/reserva_hora_salida"/>
                         <ImageButton
                             android:layout_width="?attr/actionBarSize"
                             android:layout_height="?attr/actionBarSize"
@@ -215,7 +217,8 @@
                             android:layout_weight="1"
                             android:text="Christopher Cuyo"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                            android:textColor="@color/grey_60"/>
+                            android:textColor="@color/grey_60"
+                            android:id="@+id/reserva_cliente_nombre"/>
 
                     </LinearLayout>
 
@@ -252,13 +255,27 @@
                             android:tint="@color/grey_40"
                             app:srcCompat="@drawable/ic_car"/>
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="UAZ-879"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                            android:textColor="@color/grey_60"/>
+
+                        <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/reserva_cliente_vehiculos"
+                            app:met_hideUnderline="true"
+                            android:layout_marginRight="15dp"/>
+
+                        <!--<android.support.v7.widget.AppCompatSpinner-->
+                            <!--android:layout_width="match_parent"-->
+                            <!--android:layout_height="match_parent"-->
+                            <!--android:spinnerMode="dialog"-->
+                            <!--android:id="@+id/reserva_cliente_vehiculos"/>-->
+
+                        <!--<TextView-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:text="UAZ-879"-->
+                            <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"-->
+                            <!--android:textColor="@color/grey_60"/>-->
 
                     </LinearLayout>
                     <View
@@ -300,7 +317,8 @@
                             android:layout_weight="1"
                             android:text="Thus, 10 Mar 2018"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                            android:textColor="@color/grey_60"/>
+                            android:textColor="@color/grey_60"
+                            android:id="@+id/reserva_fecha"/>
 
                     </LinearLayout>
 
@@ -346,7 +364,8 @@
                             android:text="60 mintuos"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                             android:textColor="@color/green_400"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:id="@+id/reserva_tiempo"/>
 
                     </LinearLayout>
 
@@ -384,7 +403,8 @@
                             android:text="S./ 3.00"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                             android:textColor="@color/green_400"
-                            android:textStyle="bold"/>
+                            android:textStyle="bold"
+                            android:id="@+id/reserva_precio"/>
 
                     </LinearLayout>
 
@@ -395,6 +415,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/spacing_middle"/>
+
+            <Button
+                android:layout_gravity="center"
+                android:text="G U A R D A R"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/guardar"/>
 
         </LinearLayout>
 

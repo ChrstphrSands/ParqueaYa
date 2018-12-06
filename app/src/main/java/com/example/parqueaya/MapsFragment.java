@@ -5,17 +5,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.*;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -24,8 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import com.bumptech.glide.RequestManager;
+import com.example.parqueaya.api.ParkingApi;
+import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.Cochera;
 import com.example.parqueaya.services.DataService;
 import com.example.parqueaya.utils.PermissionUtils;
@@ -34,19 +29,27 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
-    private TextView textView;
+    private TextView cochera_nombre;
+    private TextView cochera_direccion;
+    private TextView cochera_telefono;
+    private TextView cochera_horario;
+
     private Button mostrar;
     private BottomSheetBehavior bottomSheetBehavior;
     private FloatingActionButton fabReserve;
     private Context context;
+
+    private Cochera cochera;
 
     int location = -1;
 
@@ -78,8 +81,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-//        mostrar = view.findViewById(R.id.mostrar);
-        textView = view.findViewById(R.id.probando);
+
+        cochera_nombre = view.findViewById(R.id.cochera_nombre);
+        cochera_direccion = view.findViewById(R.id.cochera_direccion);
+        cochera_telefono = view.findViewById(R.id.cochera_telefono);
+        cochera_horario = view.findViewById(R.id.cochera_horario);
+
         fabReserve = view.findViewById(R.id.fab_reserve);
         fabReserve.setEnabled(false);
 
@@ -88,37 +95,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         mapFragment.getMapAsync(this);
 
         initComponent(view);
-//        showBottomSheet();
+        //        showBottomSheet();
         showDetalleCochera(view);
         return view;
     }
-
-//    public void gettingLocationBasedOnApiVersion(GoogleMap mMap){
-//        if (location != -1 && location != 0) {
-//
-//            locationManager.removeUpdates(this);
-//
-//            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(MainActivity.locations.get(location), 10));
-//            mMap.addMarker(new MarkerOptions().position(MainActivity.locations.get(location)).title(MainActivity.places.get(location)));
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(MainActivity.locations.get(location)));
-//
-//            mMap.setOnMapLongClickListener(this);
-//        } else {
-//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//                // TODO: Consider calling
-//                //    ActivityCompat#requestPermissions
-//                // here to request the missing permissions, and then overriding
-//                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//                //                                          int[] grantResults)
-//                // to handle the case where the user grants the permission. See the documentation
-//                // for ActivityCompat#requestPermissions for more details.
-//                return;
-//            }
-//            locationManager.requestLocationUpdates(provider, 400, 1, this);
-//        }
-//
-//        mMap.setOnMapLongClickListener(this);
-//    }
 
     private void initComponent(View view) {
         CoordinatorLayout llBottomSheet = view.findViewById(R.id.bottom_sheet);
@@ -155,14 +135,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showBottomSheet() {
-//        mostrar.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                fabReserve.setEnabled(true);
-//                textView.setText("Hola perro");
-//            }
-//        });
+        //        mostrar.setOnClickListener(new View.OnClickListener() {
+        //            @Override
+        //            public void onClick(View v) {
+        //                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+        //                fabReserve.setEnabled(true);
+        //                cochera_nombre.setText("Hola perro");
+        //            }
+        //        });
     }
 
     private void showDetalleCochera(View view) {
@@ -171,11 +151,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
-                ReservaFragment reservaFragment = new ReservaFragment();
+                CocheraDetailFragment cocheraDetailFragment = new CocheraDetailFragment();
+
+                Bundle args = new Bundle();
+                args.putSerializable("cochera", cochera);
+                cocheraDetailFragment.setArguments(args);
+
                 getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, reservaFragment)
-                        .addToBackStack(null)
-                        .commit();
+                    .replace(R.id.container, cocheraDetailFragment)
+                    .addToBackStack(null)
+                    .commit();
 
                 try {
                     //                    mMap.animateCamera(zoomingLocation());
@@ -188,22 +173,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private void enableMyLocation() {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             PermissionUtils.requestPermission((AppCompatActivity) getActivity(), LOCATION_PERMISSION_REQUEST_CODE,
-                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+                Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else if (mMap != null) {
             mMap.setMyLocationEnabled(true);
         }
     }
 
-//    @Override
-//    public boolean onMyLocationButtonClick() {
-//        Toast.makeText(context,"My location button clicked", Toast.LENGTH_LONG).show();
-//        return false;
-//    }
-//
-//    @Override
-//    public void onMyLocationClick(@NonNull Location location) {
-//        Toast.makeText(context,"Current location:\n" + location, Toast.LENGTH_LONG).show();
-//    }
+    //    @Override
+    //    public boolean onMyLocationButtonClick() {
+    //        Toast.makeText(context,"My location button clicked", Toast.LENGTH_LONG).show();
+    //        return false;
+    //    }
+    //
+    //    @Override
+    //    public void onMyLocationClick(@NonNull Location location) {
+    //        Toast.makeText(context,"Current location:\n" + location, Toast.LENGTH_LONG).show();
+    //    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -245,14 +230,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
         try {
             Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(latLng.latitude,latLng.longitude, 1);
-            updateMap(23000);
-        } catch (IOException exception){
+            List<Address> addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
+                        updateMap(23000);
+        } catch (IOException exception) {
 
         }
-
-        updateMap(23000);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,15));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
     }
 
     private void updateMap(int zipcode) {
@@ -272,15 +255,49 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             marker.snippet(coch.getDescripcion());
             marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.pin));
             mMap.addMarker(marker);
-            mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker mark) {
-                    if (mark.equals(mark)) {
-                        Marker marker1;
-                    }
-                    return false;
-                }
-            });
         }
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker mark) {
+                String idS = mark.getId();
+                idS = idS.replaceAll("\\D+", "");
+                int id = Integer.parseInt(idS);
+                showCochera(id);
+                return false;
+            }
+        });
+    }
+
+    private void showCochera(int id) {
+
+        ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
+        Call<Cochera> callCochera = parkingApi.getCochera(id);
+
+        callCochera.enqueue(new Callback<Cochera>() {
+            @Override
+            public void onResponse(Call<Cochera> call, Response<Cochera> response) {
+                if (response.isSuccessful() && response.code() == 200) {
+                    cochera = response.body();
+
+                    if (cochera != null) {
+                        cochera_nombre.setText(cochera.getNombre());
+                        cochera_direccion.setText(cochera.getDireccion());
+                        cochera_telefono.setText(cochera.getTelefono());
+                        cochera_horario.setText(cochera.getHorarioAtencion());
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Cochera> call, Throwable t) {
+
+            }
+
+        });
+
+        fabReserve.setEnabled(true);
+
     }
 }

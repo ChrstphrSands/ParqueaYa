@@ -1,4 +1,4 @@
-package com.example.parqueaya.API;
+package com.example.parqueaya.api;
 
 import com.example.parqueaya.models.Cliente;
 import com.example.parqueaya.models.Cochera;
@@ -12,6 +12,9 @@ import java.util.List;
 public interface ParkingApi {
     @GET("cocheras")
     Call<List<Cochera>> getCocheras();
+
+    @GET("cocheras/{id}")
+    Call<Cochera> getCochera(@Path("id") int id);
 
     @GET("clientes")
     Call<List<Cliente>> getClientes();

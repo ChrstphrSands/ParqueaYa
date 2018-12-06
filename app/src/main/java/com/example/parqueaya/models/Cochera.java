@@ -2,9 +2,10 @@ package com.example.parqueaya.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Cochera {
+public class Cochera implements Serializable {
     @SerializedName("Nombre")
     private String nombre;
 

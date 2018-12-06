@@ -16,7 +16,6 @@
         android:fitsSystemWindows="true">
         <!--android:theme="@style/ThemeOverlay.AppCompat.ActionBar" -->
 
-
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
@@ -317,8 +316,7 @@
                         android:gravity="center_vertical"
                         android:text="Descripcion"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="@color/grey_80"
-                        android:id="@+id/cochera_descripcion"/>
+                        android:textColor="@color/grey_80"/>
 
                     <TextView
                         android:layout_width="match_parent"
@@ -326,7 +324,8 @@
                         android:gravity="center_vertical"
                         android:text="@string/long_lorem_ipsum"
                         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                        android:textColor="@color/grey_40"/>
+                        android:textColor="@color/grey_40"
+                        android:id="@+id/cochera_descripcion"/>
 
                 </LinearLayout>
 
@@ -335,6 +334,36 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/spacing_large"/>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/spacing_large"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:background="@android:color/white"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <android.support.v7.widget.AppCompatButton
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="R E S E R V A R"
+                        android:theme="@style/Button.White.Primary"
+                        android:paddingBottom="-18dp"
+                        android:paddingLeft="-18dp"
+                        android:paddingRight="-18dp"
+                        android:id="@+id/reservar"
+                        />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 

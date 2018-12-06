@@ -33,7 +33,7 @@
                 android:background="@drawable/swipe_up_handle"/>
 
             <TextView
-                android:id="@+id/probando"
+                android:id="@+id/cochera_nombre"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/spacing_xxlarge"
@@ -132,7 +132,8 @@
                             android:gravity="center_vertical"
                             android:text="740 Valencia St, San Francisco, CA"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/grey_90"/>
+                            android:textColor="@color/grey_90"
+                            android:id="@+id/cochera_direccion"/>
 
                     </LinearLayout>
 
@@ -159,7 +160,8 @@
                             android:gravity="center_vertical"
                             android:text="(415) 349-0942"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/grey_90"/>
+                            android:textColor="@color/grey_90"
+                            android:id="@+id/cochera_telefono"/>
 
                     </LinearLayout>
 
@@ -167,7 +169,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        >
 
                         <ImageButton
                             android:layout_width="wrap_content"
@@ -186,7 +189,36 @@
                             android:gravity="center_vertical"
                             android:text="Wed, 10 AM - 9 PM"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/grey_90"/>
+                            android:textColor="@color/grey_90"
+                            android:id="@+id/cochera_horario"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:layout_width="wrap_content"
+                            android:layout_height="?attr/actionBarSize"
+                            android:background="@android:color/transparent"
+                            android:tint="@color/grey_20"
+                            app:srcCompat="@drawable/ic_favorite"/>
+
+                        <View
+                            android:layout_width="@dimen/spacing_mxlarge"
+                            android:layout_height="0dp"/>
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:text="Reservar"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/grey_90"
+                            android:id="@+id/cochera_reservar"/>
 
                     </LinearLayout>
 
@@ -196,4 +228,5 @@
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -1,8 +1,8 @@
 package com.example.parqueaya.services;
 
 import android.util.Log;
-import com.example.parqueaya.API.ParkingApi;
-import com.example.parqueaya.API.RetrofitInstance;
+import com.example.parqueaya.api.ParkingApi;
+import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.Cliente;
 import com.example.parqueaya.models.Cochera;
 import com.example.parqueaya.models.Reserva;

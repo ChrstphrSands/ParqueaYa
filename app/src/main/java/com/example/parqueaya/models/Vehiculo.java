@@ -2,7 +2,7 @@ package com.example.parqueaya.models;
 
 import com.google.gson.annotations.SerializedName;
 
-class Vehiculo {
+public class Vehiculo {
     public Vehiculo() {
     }
 

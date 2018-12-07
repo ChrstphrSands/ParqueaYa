@@ -39,7 +39,7 @@ public class Cochera implements Serializable {
     @SerializedName("EmpresaId")
     private int empresaId;
 
-    @SerializedName("CocheraId")
+    @SerializedName("id")
     private int cocheraId;
 
     @SerializedName("Servicio")

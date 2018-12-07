@@ -333,4 +333,6 @@
         <item type="color">#ff9800</item>
     </array>
 
+    <color name="loginSignup1Background">#f1f5f8</color>
+
 </resources>

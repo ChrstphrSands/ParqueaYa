@@ -169,12 +169,14 @@ public class DataService {
         callCliente.enqueue(new Callback<Cliente>() {
             @Override
             public void onResponse(Call<Cliente> call, Response<Cliente> response) {
-
+                Log.d("Update", String.valueOf(response.body()));
+                Log.d("Update", String.valueOf(response.code()));
+                Log.d("Update", String.valueOf(response.message()));
             }
 
             @Override
             public void onFailure(Call<Cliente> call, Throwable t) {
-
+                Log.d("Update", String.valueOf(t.getCause()));
             }
         });
     }

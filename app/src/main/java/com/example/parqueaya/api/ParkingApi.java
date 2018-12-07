@@ -32,7 +32,7 @@ public interface ParkingApi {
     Call<Cliente> updateCliente(@Path("id") int id, @Body Cliente cliente);
 
     @GET("servicios")
-    Call<List<Servicio>> getServicios(@Query("cochera_id") int cochera_id);
+    Call<List<Servicio>> getServicios(@Query("CocheraId") int CocheraId);
 
     @POST("reservas")
     Call<Reserva> setReserva(@Body Reserva reserva);

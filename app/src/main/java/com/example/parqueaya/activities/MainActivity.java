@@ -1,6 +1,8 @@
-package com.example.parqueaya;
+package com.example.parqueaya.activities;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -20,6 +22,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+import com.example.parqueaya.fragments.ClientDetailFragment;
+import com.example.parqueaya.fragments.MapsFragment;
+import com.example.parqueaya.R;
 import com.example.parqueaya.utils.Tools;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -28,6 +34,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
     GoogleApiClient.ConnectionCallbacks, LocationListener {
@@ -41,21 +49,39 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     final int PERMISSION_LOCATION = 111;
 
     private GoogleApiClient mGoogleApiClient;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+
+    Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        authFirebase();
         initToolbar();
         initNavigationMenu();
         initBottomNavigation();
 
         initMap();
+    }
 
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        fragmentManager.beginTransaction().replace(R.id.container, new MapsFragment()).commit();
+    private void authFirebase() {
 
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser != null) {
+
+                } else {
+
+                }
+            }
+        };
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     private void initToolbar() {
@@ -114,12 +140,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
+        mAuth.addAuthStateListener(authStateListener);
     }
 
     @Override
     protected void onStop() {
         mGoogleApiClient.disconnect();
         super.onStop();
+        mAuth.removeAuthStateListener(authStateListener);
     }
 
     @Override
@@ -151,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     }
 
     private void initNavigationMenu() {
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         NavigationView nav_view = findViewById(R.id.nav_view);
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name
@@ -165,7 +194,41 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-                selectDrawerItem(item);
+                                switch (item.getItemId()) {
+                                    case R.id.nav_profile:
+                                        if (firebaseUser != null) {
+                                            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
+                                            FragmentManager fragmentManager = getSupportFragmentManager();
+                                            fragmentManager.beginTransaction()
+                                                .replace(R.id.container, clientDetailFragment)
+                                                .addToBackStack(null)
+                                                .commit();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
+                                        }
+                                        break;
+                                    case R.id.nav_favorite:
+                                        if (firebaseUser != null) {
+                                            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
+                                            FragmentManager fragmentManager = getSupportFragmentManager();
+                                            fragmentManager.beginTransaction()
+                                                .replace(R.id.container, clientDetailFragment)
+                                                .addToBackStack(null)
+                                                .commit();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
+                                        }
+                                        break;
+                                    case R.id.nav_logout:
+                                        if (firebaseUser != null) {
+                                            FirebaseAuth.getInstance().signOut();
+                                            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                            startActivity(intent);
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
+                                        }
+                                        break;
+                                }
                 drawer.closeDrawers();
                 return true;
             }
@@ -182,27 +245,33 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 switch (item.getItemId()) {
                     case R.id.navigation_map:
                         navigationView.setBackgroundColor(getResources().getColor(R.color.pink_800));
-                        selectDrawerItem(item);
+                        intent = new Intent(MainActivity.this, MainActivity.class);
+                        startActivity(intent);
                         return true;
+                    case R.id.navigation_favorite:
+                        navigationView.setBackgroundColor(getResources().getColor(R.color.amber_100));
+                        intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        break;
                 }
                 return false;
             }
         });
 
-//        NestedScrollView nested_content = findViewById(R.id.nested_content);
-//        nested_content.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-//            @Override
-//            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-//                if (scrollY < oldScrollY) {
-//                    animateNavigation(false);
-//                    //                    animateToolbar(false);
-//                }
-//                if (scrollY > oldScrollY) {
-//                    animateNavigation(true);
-//                    //                    animateToolbar(true);
-//                }
-//            }
-//        });
+        //        NestedScrollView nested_content = findViewById(R.id.nested_content);
+        //        nested_content.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+        //            @Override
+        //            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        //                if (scrollY < oldScrollY) {
+        //                    animateNavigation(false);
+        //                    //                    animateToolbar(false);
+        //                }
+        //                if (scrollY > oldScrollY) {
+        //                    animateNavigation(true);
+        //                    //                    animateToolbar(true);
+        //                }
+        //            }
+        //        });
 
         Tools.setSystemBarColor(this, R.color.grey_5);
         Tools.setSystemBarLight(this);
@@ -213,9 +282,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Class fragmentClass = null;
         switch (item.getItemId()) {
             case R.id.nav_profile:
-                fragmentClass = ClientDetailFragment.class;
-                actionBar.setTitle(item.getTitle());
-                break;
+                if (mAuth != null){
+                    fragmentClass = ClientDetailFragment.class;
+                    actionBar.setTitle(item.getTitle());
+                    break;
+                } else {
+                    Toast.makeText(this, "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
+                }
+
             case R.id.navigation_map:
                 fragmentClass = MapsFragment.class;
                 actionBar.setTitle(item.getTitle());
@@ -242,33 +316,30 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
 
     //    boolean isNavigationHide = false;
-//
-//    private void animateNavigation(boolean hide) {
-//        if (isNavigationHide && hide || !isNavigationHide && !hide) return;
-//        isNavigationHide = hide;
-//        int moveY = hide ? (2 * navigationView.getHeight()) : 0;
-//        navigationView.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
-//    }
+    //
+    //    private void animateNavigation(boolean hide) {
+    //        if (isNavigationHide && hide || !isNavigationHide && !hide) return;
+    //        isNavigationHide = hide;
+    //        int moveY = hide ? (2 * navigationView.getHeight()) : 0;
+    //        navigationView.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
+    //    }
 
-//    @Override
-//    public boolean onKeyUp(int keyCode, KeyEvent event) {
-//        boolean back = false;
-//        if(keyCode == KeyEvent.KEYCODE_BACK){
-//            back = true;
-//            backStack();
-//        }
-//        return back;
-//    }
-//
-//    private void backStack(){
-//        if(getSupportFragmentManager().getBackStackEntryCount()>1){
-//            getSupportFragmentManager().popBackStack();
-//        }else
-//        if(getSupportFragmentManager().getBackStackEntryCount()==1){
-//            this.finish();
-//        }
-//    }
-
-
-
+    //    @Override
+    //    public boolean onKeyUp(int keyCode, KeyEvent event) {
+    //        boolean back = false;
+    //        if(keyCode == KeyEvent.KEYCODE_BACK){
+    //            back = true;
+    //            backStack();
+    //        }
+    //        return back;
+    //    }
+    //
+    //    private void backStack(){
+    //        if(getSupportFragmentManager().getBackStackEntryCount()>1){
+    //            getSupportFragmentManager().popBackStack();
+    //        }else
+    //        if(getSupportFragmentManager().getBackStackEntryCount()==1){
+    //            this.finish();
+    //        }
+    //    }
 }

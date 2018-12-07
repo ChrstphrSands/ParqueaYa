@@ -315,7 +315,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Thus, 10 Mar 2018"
+                            android:text="Viernes 7 Diciembre 2018"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
                             android:textColor="@color/grey_60"
                             android:id="@+id/reserva_fecha"/>

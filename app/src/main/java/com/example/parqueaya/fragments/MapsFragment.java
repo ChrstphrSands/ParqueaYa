@@ -1,4 +1,4 @@
-package com.example.parqueaya;
+package com.example.parqueaya.fragments;
 
 
 import android.Manifest;
@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.example.parqueaya.R;
 import com.example.parqueaya.api.ParkingApi;
 import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.Cochera;
@@ -29,6 +31,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -50,6 +54,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private Context context;
 
     private Cochera cochera;
+    private List<Cochera> cocheras;
 
     int location = -1;
 
@@ -58,6 +63,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private MapView mMapView;
     private GoogleMap mMap;
     private MarkerOptions userMarker;
+
 
     private boolean mPermissionDenied = false;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -240,7 +246,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
 
     private void updateMap(int zipcode) {
 
-        List<Cochera> cocheras = DataService.getInstance().getCocheras();
+        cocheras = DataService.getInstance().getCocheras();
 
         for (int x = 0; x < cocheras.size(); x++) {
             Cochera coch = cocheras.get(x);

@@ -8,4 +8,5 @@
     <string name="permission_required_toast">Permiso de localización es requerido</string>
     <string name="permission_rationale_location">Acceso al servicio de localización es requerido.</string>
     <string name="title_activity_maps">Map</string>
+    <string name="facebook_app_id">1952134881757247</string> <string name="fb_login_protocol_scheme">fb1952134881757247</string>
 </resources>

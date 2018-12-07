@@ -1,4 +1,4 @@
-package com.example.parqueaya;
+package com.example.parqueaya.fragments;
 
 
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.example.parqueaya.R;
 import com.example.parqueaya.models.Cochera;
 
 public class CocheraDetailFragment extends Fragment {

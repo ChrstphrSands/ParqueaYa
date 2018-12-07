@@ -1,4 +1,4 @@
-package com.example.parqueaya;
+package com.example.parqueaya.fragments;
 
 
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.example.parqueaya.R;
 import com.example.parqueaya.api.ParkingApi;
 import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.*;
@@ -103,23 +104,22 @@ public class ReservaFragment extends Fragment {
                     servicios.get(0).getCosto(), 1, vehiculoId, servicios.get(0).getId(), "",
                     setFormattedTime(salida), "");
                 saveData(reserva);
+                reserva = null;
             }
         });
-
-
-
     }
 
     private void setServicio() {
         assert cochera != null;
         ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
-        Call<List<Servicio>> call = parkingApi.getServicios(1);
+        Call<List<Servicio>> call = parkingApi.getServicios(cochera.getCocheraId());
 
         call.enqueue(new Callback<List<Servicio>>() {
             @Override
             public void onResponse(Call<List<Servicio>> call, Response<List<Servicio>> response) {
                 if (response.isSuccessful() && response.code() == 200) {
                     servicios = response.body();
+                    Log.d("Servicio", String.valueOf(servicios));
                     Double precio = servicios.get(0).getCosto();
 
                     precio_aproximado.setText(String.valueOf(precio));

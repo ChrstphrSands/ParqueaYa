@@ -4,22 +4,22 @@
         android:id="@+id/nav_profile"
         android:icon="@drawable/ic_favorite"
         android:title="Mi Perfil"/>
-    <!--<item-->
-        <!--android:id="@+id/nav_trending"-->
-        <!--android:icon="@drawable/ic_favorite"-->
-        <!--android:title="Trending"/>-->
-    <!--<item-->
-        <!--android:id="@+id/nav_latest"-->
-        <!--android:icon="@drawable/ic_favorite"-->
-        <!--android:title="Latest"/>-->
-    <!--<item-->
-        <!--android:id="@+id/nav_highlight"-->
-        <!--android:icon="@drawable/ic_favorite"-->
-        <!--android:title="Highlight"/>-->
-    <!--<item-->
-        <!--android:id="@+id/nav_settings"-->
-        <!--android:icon="@drawable/ic_favorite"-->
-        <!--android:title="Settings"/>-->
+    <item
+        android:id="@+id/nav_favorite"
+        android:icon="@drawable/ic_favorite"
+        android:title="Mis Favoritos"/>
+    <item
+        android:id="@+id/nav_historial"
+        android:icon="@drawable/ic_favorite"
+        android:title="Mi Historial"/>
+    <item
+        android:id="@+id/nav_calificaciones"
+        android:icon="@drawable/ic_favorite"
+        android:title="Mis Calificaciones"/>
+    <item
+        android:id="@+id/nav_logout"
+        android:icon="@drawable/ic_favorite"
+        android:title="Cerrar Sesión"/>
     <!--<item-->
         <!--android:id="@+id/nav_help"-->
         <!--android:icon="@drawable/ic_favorite"-->

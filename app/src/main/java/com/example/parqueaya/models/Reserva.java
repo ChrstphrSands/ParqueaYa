@@ -2,7 +2,9 @@ package com.example.parqueaya.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Reserva {
+import java.io.Serializable;
+
+public class Reserva implements Serializable {
     public Reserva() {
     }
 

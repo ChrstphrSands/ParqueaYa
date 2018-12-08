@@ -3,6 +3,7 @@ package com.example.parqueaya.fragments;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,6 +95,11 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
         int i = v.getId();
         if (i == R.id.cliente_foto) {
             saveData();
+            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
+            getActivity().getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, clientDetailFragment)
+                .addToBackStack(null)
+                .commit();
         }
     }
 }

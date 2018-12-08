@@ -127,13 +127,16 @@ public class DataService {
         return servicioList;
     }
 
-    public void setReserva(Reserva reserva) {
+    public void setReserva(final Reserva reserva) {
         //        retrofitInstance = new RetrofitInstance();
         ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
         Call<Reserva> callReserva = parkingApi.setReserva(reserva);
         callReserva.enqueue(new Callback<Reserva>() {
             @Override
             public void onResponse(Call<Reserva> call, Response<Reserva> response) {
+                if (response != null) {
+                    Log.d("Body", String.valueOf(response.body()));
+                }
             }
 
             @Override

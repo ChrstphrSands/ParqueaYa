@@ -1,7 +1,6 @@
 package com.example.parqueaya.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -23,9 +22,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import com.example.parqueaya.MyApplication;
 import com.example.parqueaya.fragments.ClientDetailFragment;
 import com.example.parqueaya.fragments.MapsFragment;
 import com.example.parqueaya.R;
+import com.example.parqueaya.fragments.ReservaDetailFragment;
 import com.example.parqueaya.utils.Tools;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -36,6 +37,10 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
     GoogleApiClient.ConnectionCallbacks, LocationListener {
@@ -189,7 +194,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         };
 
-        drawer.setDrawerListener(toggle);
+//        drawer.setDrawerListener(toggle);
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -238,6 +243,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
 
     private void initBottomNavigation() {
         navigationView = findViewById(R.id.navigation);
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         navigationView.setBackgroundColor(getResources().getColor(R.color.pink_800));
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -253,6 +259,28 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         intent = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(intent);
                         break;
+                    case R.id.navigation_books:
+
+                        if (firebaseUser != null) {
+                            navigationView.setBackgroundColor(getResources().getColor(R.color.amber_100));
+
+                            int reservaId = ((MyApplication)getApplicationContext()).getReservaId();
+
+                            Log.d("Reserva", String.valueOf(reservaId));
+                            if (reservaId != 0) {
+                                ReservaDetailFragment reservaDetailFragment = new ReservaDetailFragment();
+                                FragmentManager fragmentManager = getSupportFragmentManager();
+                                fragmentManager.beginTransaction()
+                                    .replace(R.id.container, reservaDetailFragment)
+                                    .addToBackStack(null)
+                                    .commit();
+                                break;
+                            } else {
+                                Toast.makeText(MainActivity.this, "No tienes reservas", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Debe de estar registrado", Toast.LENGTH_SHORT).show();
+                        }
                 }
                 return false;
             }

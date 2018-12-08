@@ -79,9 +79,9 @@ public class CocheraDetailFragment extends Fragment {
                     reservaFragment.setArguments(args);
 
                     getActivity().getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.container, reservaFragment)
-                            .addToBackStack(null)
-                            .commit();
+                        .replace(R.id.container, reservaFragment)
+                        .addToBackStack(null)
+                        .commit();
                 } else {
                     Toast.makeText(getContext(), "Debe estar registrado", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getContext(), LoginActivity.class);

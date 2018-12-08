@@ -2,6 +2,7 @@ package com.example.parqueaya.fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatSpinner;
@@ -16,6 +17,8 @@ import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.*;
 import com.example.parqueaya.services.DataService;
 import com.example.parqueaya.utils.Tools;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 import com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner;
 import retrofit2.Call;
@@ -53,6 +56,11 @@ public class ReservaFragment extends Fragment {
 
     private int vehiculoId;
 
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
+
+    private ParkingApi parkingApi;
+
     public ReservaFragment() {
         // Required empty public constructor
     }
@@ -67,7 +75,7 @@ public class ReservaFragment extends Fragment {
         Log.d("Cochera: ", String.valueOf(cochera));
         initComponents(view);
         setServicio();
-        getCliente(view);
+        authFirebase(view);
 
         return view;
     }
@@ -109,6 +117,44 @@ public class ReservaFragment extends Fragment {
         });
     }
 
+    private void authFirebase(final View view) {
+        mAuth = FirebaseAuth.getInstance();
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser != null) {
+                    parkingApi = RetrofitInstance.createService(ParkingApi.class);
+
+                    Call<Cliente> call = parkingApi.getClienteDetail(firebaseUser.getUid());
+
+                    call.enqueue(new Callback<Cliente>() {
+                        @Override
+                        public void onResponse(Call<Cliente> call, Response<Cliente> response) {
+                            if (response.isSuccessful() && response.code() == 200) {
+                                cliente = response.body();
+                                if (cliente != null) {
+                                    cliente_nombre.setText(String.format("%s %s", cliente.getNombre(), cliente.getApellido()));
+                                    vehiculos = cliente.getVehiculos();
+                                    Log.d("Vehiculo", String.valueOf(vehiculos));
+                                    setVehiculos(vehiculos, view);
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Cliente> call, Throwable t) {
+                            Log.e("Error cliente", t.getLocalizedMessage());
+                        }
+                    });
+
+                } else {
+                    Toast.makeText(getContext(), "Usuario no logueado", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+    }
+
     private void setServicio() {
         assert cochera != null;
         ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
@@ -134,30 +180,30 @@ public class ReservaFragment extends Fragment {
         });
     }
 
-    private void getCliente(final View view) {
-        ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
-        Call<Cliente> call = parkingApi.getCliente(4);
-
-        call.enqueue(new Callback<Cliente>() {
-            @Override
-            public void onResponse(Call<Cliente> call, Response<Cliente> response) {
-                if (response.isSuccessful() && response.code() == 200) {
-                    cliente = response.body();
-                    if (cliente != null) {
-                        cliente_nombre.setText(String.format("%s %s", cliente.getNombre(), cliente.getApellido()));
-                        vehiculos = cliente.getVehiculos();
-                        setVehiculos(vehiculos, view);
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Cliente> call, Throwable t) {
-
-            }
-
-        });
-    }
+//    private void getCliente(final View view) {
+//        ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
+//        Call<Cliente> call = parkingApi.getCliente(4);
+//
+//        call.enqueue(new Callback<Cliente>() {
+//            @Override
+//            public void onResponse(Call<Cliente> call, Response<Cliente> response) {
+//                if (response.isSuccessful() && response.code() == 200) {
+//                    cliente = response.body();
+//                    if (cliente != null) {
+//                        cliente_nombre.setText(String.format("%s %s", cliente.getNombre(), cliente.getApellido()));
+//                        vehiculos = cliente.getVehiculos();
+//                        setVehiculos(vehiculos, view);
+//                    }
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Cliente> call, Throwable t) {
+//
+//            }
+//
+//        });
+//    }
 
     private void setVehiculos(final List<Vehiculo> vehiculos, View view) {
         for (int i = 0; i < vehiculos.size(); i++) {
@@ -223,6 +269,18 @@ public class ReservaFragment extends Fragment {
     public static String setFormattedTime(Long time) {
         SimpleDateFormat newFormat = new SimpleDateFormat("H:mm:ss");
         return newFormat.format(new Date(time));
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mAuth.removeAuthStateListener(authStateListener);
     }
 
     private void saveData(Reserva reserva)  {

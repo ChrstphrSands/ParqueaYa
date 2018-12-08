@@ -22,6 +22,18 @@ public class Cliente implements Serializable {
         this.UID = UID;
     }
 
+    public Cliente(int cliente_id, String apellido, String direccion, int celular, int telefono, String nombre, int DNI, String email, String UID) {
+        this.cliente_id = cliente_id;
+        this.apellido = apellido;
+        this.direccion = direccion;
+        this.celular = celular;
+        this.telefono = telefono;
+        this.nombre = nombre;
+        this.DNI = DNI;
+        this.email = email;
+        this.UID = UID;
+    }
+
     @SerializedName("id")
     private int cliente_id;
 

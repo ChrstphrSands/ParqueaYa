@@ -83,7 +83,7 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
         String direccion = String.valueOf(cliente_direccion.getText());
         List<Vehiculo> vehiculos = new ArrayList<>();
 
-        cliente = new Cliente(apellido, direccion, celular, telefono, nombre, dni, email, vehiculos, uid);
+        cliente = new Cliente(cliente.getCliente_id(), apellido, direccion, celular, telefono, nombre, dni, email, uid);
         Log.d("Cliente", String.valueOf(cliente));
 
         DataService.getInstance().updateCliente(cliente.getCliente_id(), cliente);

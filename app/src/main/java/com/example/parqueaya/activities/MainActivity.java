@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -21,13 +22,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.parqueaya.MyApplication;
+import com.example.parqueaya.dataSource.FavoritoDataSource;
+import com.example.parqueaya.dataSource.FavoritoRepository;
+import com.example.parqueaya.dataSource.ReservaRoomDatabase;
 import com.example.parqueaya.fragments.ClientDetailFragment;
 import com.example.parqueaya.fragments.MapsFragment;
 import com.example.parqueaya.R;
 import com.example.parqueaya.fragments.ReservaDetailFragment;
+import com.example.parqueaya.utils.Common;
 import com.example.parqueaya.utils.Tools;
+import com.example.parqueaya.utils.ViewAnimation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,9 +45,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
     GoogleApiClient.ConnectionCallbacks, LocationListener {
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private MapsFragment mainFragment;
 
     final int PERMISSION_LOCATION = 111;
+    private final static int LOADING_DURATION = 3500;
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
@@ -68,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         initToolbar();
         initNavigationMenu();
         initBottomNavigation();
-
+        initDB();
         initMap();
     }
 
@@ -148,6 +153,26 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mAuth.addAuthStateListener(authStateListener);
     }
 
+//    private void loadingAndDisplayContent() {
+//        final LinearLayout lyt_progress = (LinearLayout) findViewById(R.id.lyt_progress);
+//        lyt_progress.setVisibility(View.VISIBLE);
+//        lyt_progress.setAlpha(1.0f);
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                ViewAnimation.fadeOut(lyt_progress);
+//            }
+//        }, LOADING_DURATION);
+//
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//            }
+//        }, LOADING_DURATION + 400);
+//    }
+
     @Override
     protected void onStop() {
         mGoogleApiClient.disconnect();
@@ -194,46 +219,46 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             }
         };
 
-//        drawer.setDrawerListener(toggle);
+        //        drawer.setDrawerListener(toggle);
         toggle.syncState();
         nav_view.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull final MenuItem item) {
-                                switch (item.getItemId()) {
-                                    case R.id.nav_profile:
-                                        if (firebaseUser != null) {
-                                            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
-                                            FragmentManager fragmentManager = getSupportFragmentManager();
-                                            fragmentManager.beginTransaction()
-                                                .replace(R.id.container, clientDetailFragment)
-                                                .addToBackStack(null)
-                                                .commit();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
-                                        }
-                                        break;
-                                    case R.id.nav_favorite:
-                                        if (firebaseUser != null) {
-                                            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
-                                            FragmentManager fragmentManager = getSupportFragmentManager();
-                                            fragmentManager.beginTransaction()
-                                                .replace(R.id.container, clientDetailFragment)
-                                                .addToBackStack(null)
-                                                .commit();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
-                                        }
-                                        break;
-                                    case R.id.nav_logout:
-                                        if (firebaseUser != null) {
-                                            FirebaseAuth.getInstance().signOut();
-                                            Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                                            startActivity(intent);
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
-                                        }
-                                        break;
-                                }
+                switch (item.getItemId()) {
+                    case R.id.nav_profile:
+                        if (firebaseUser != null) {
+                            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                .replace(R.id.container, clientDetailFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case R.id.nav_favorite:
+                        if (firebaseUser != null) {
+                            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                .replace(R.id.container, clientDetailFragment)
+                                .addToBackStack(null)
+                                .commit();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case R.id.nav_logout:
+                        if (firebaseUser != null) {
+                            FirebaseAuth.getInstance().signOut();
+                            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "DEBE DE ESTAR REGISTRADO", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                }
                 drawer.closeDrawers();
                 return true;
             }
@@ -264,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         if (firebaseUser != null) {
                             navigationView.setBackgroundColor(getResources().getColor(R.color.amber_100));
 
-                            int reservaId = ((MyApplication)getApplicationContext()).getReservaId();
+                            int reservaId = ((MyApplication) getApplicationContext()).getReservaId();
 
                             Log.d("Reserva", String.valueOf(reservaId));
                             if (reservaId != 0) {
@@ -310,7 +335,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         Class fragmentClass = null;
         switch (item.getItemId()) {
             case R.id.nav_profile:
-                if (mAuth != null){
+                if (mAuth != null) {
                     fragmentClass = ClientDetailFragment.class;
                     actionBar.setTitle(item.getTitle());
                     break;
@@ -370,4 +395,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     //            this.finish();
     //        }
     //    }
+
+    private void initDB() {
+        Common.reservaRoomDatabase = ReservaRoomDatabase.getInstance(this);
+        Common.favoritoRepository =
+            FavoritoRepository.getInstance(
+                FavoritoDataSource.getInstance(
+                    Common.reservaRoomDatabase.favoritoDao()
+                ));
+    }
+
 }

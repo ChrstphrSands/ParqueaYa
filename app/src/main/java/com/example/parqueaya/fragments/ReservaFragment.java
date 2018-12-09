@@ -3,19 +3,17 @@ package com.example.parqueaya.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.AppCompatSpinner;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import com.example.parqueaya.MyApplication;
 import com.example.parqueaya.R;
 import com.example.parqueaya.api.ParkingApi;
 import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.*;
-import com.example.parqueaya.services.DataService;
 import com.example.parqueaya.utils.Tools;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,12 +23,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.sql.Time;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class ReservaFragment extends Fragment {
 
@@ -53,8 +47,11 @@ public class ReservaFragment extends Fragment {
 
     private long entrada;
     private long salida;
+    private String placa;
+    private String fecha;
 
     private int vehiculoId;
+    private int reservaId;
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -76,6 +73,7 @@ public class ReservaFragment extends Fragment {
         initComponents(view);
         setServicio();
         authFirebase(view);
+        setDate();
 
         return view;
     }
@@ -109,12 +107,23 @@ public class ReservaFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 reserva = new Reserva(setFormattedTime(entrada),
-                    servicios.get(0).getCosto(), 1, vehiculoId, servicios.get(0).getId(), "",
+                    Double.parseDouble(precio_aproximado.getText().toString()), 1, vehiculoId, servicios.get(0).getId(), "",
                     setFormattedTime(salida), "");
                 saveData(reserva);
-                reserva = null;
+
+                ((MyApplication)getActivity().getApplicationContext()).setNombre(cliente.getNombre());
+                ((MyApplication)getActivity().getApplicationContext()).setPlaca(placa);
+                ((MyApplication)getActivity().getApplicationContext()).setFecha(fecha);
+                ((MyApplication)getActivity().getApplicationContext()).setPrecio_aproximado(Double.parseDouble(precio_aproximado.getText().toString()));
+
+                ReservaDetailFragment reservaDetailFragment = new ReservaDetailFragment();
+                Bundle bundle = new Bundle();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, reservaDetailFragment)
+                    .commit();
             }
         });
+
     }
 
     private void authFirebase(final View view) {
@@ -168,7 +177,7 @@ public class ReservaFragment extends Fragment {
                     Log.d("Servicio", String.valueOf(servicios));
                     Double precio = servicios.get(0).getCosto();
 
-                    precio_aproximado.setText(String.valueOf(precio));
+                    precio_aproximado.setText(String.valueOf(precio + " por hora"));
                 }
             }
 
@@ -179,31 +188,6 @@ public class ReservaFragment extends Fragment {
 
         });
     }
-
-//    private void getCliente(final View view) {
-//        ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
-//        Call<Cliente> call = parkingApi.getCliente(4);
-//
-//        call.enqueue(new Callback<Cliente>() {
-//            @Override
-//            public void onResponse(Call<Cliente> call, Response<Cliente> response) {
-//                if (response.isSuccessful() && response.code() == 200) {
-//                    cliente = response.body();
-//                    if (cliente != null) {
-//                        cliente_nombre.setText(String.format("%s %s", cliente.getNombre(), cliente.getApellido()));
-//                        vehiculos = cliente.getVehiculos();
-//                        setVehiculos(vehiculos, view);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Cliente> call, Throwable t) {
-//
-//            }
-//
-//        });
-//    }
 
     private void setVehiculos(final List<Vehiculo> vehiculos, View view) {
         for (int i = 0; i < vehiculos.size(); i++) {
@@ -225,6 +209,7 @@ public class ReservaFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 vehiculoId = vehiculos.get(position).getId();
+                placa = vehiculos.get(position).getPlaca();
             }
         });
     }
@@ -258,6 +243,11 @@ public class ReservaFragment extends Fragment {
                 calendar.set(Calendar.AM_PM, calendar.get(Calendar.AM_PM));
                 salida = calendar.getTimeInMillis();
                 textView.setText(Tools.getFormattedTimeEvent(salida));
+                String time = String.valueOf(setTimeAprox(salida, entrada));
+                tiempo_aproximado.setText(time + " minutos");
+
+                String price = String.valueOf(setPrice(servicios.get(0).getCosto(), time));
+                precio_aproximado.setText(price);
             }
         }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
         datePicker.setThemeDark(false);
@@ -265,10 +255,35 @@ public class ReservaFragment extends Fragment {
         datePicker.show(getActivity().getFragmentManager(), "Timepickerdialog");
     }
 
+    private String setPrice(Double costo, String time) {
+        double minute = Math.abs(costo / 60);
+        double price = minute * Double.parseDouble(time);
+        return String.format("%.2f", price);
+    }
+
+    private void setDate() {
+        SimpleDateFormat formateador = new SimpleDateFormat("dd 'de' MMMM 'de' yyyy", new Locale("ES"));
+//        "EEEE, dd 'de' MMMM 'de' yyyy"
+        Date date = new Date();
+        fecha = formateador.format(date);
+
+        if (fecha == null || fecha.isEmpty()) {
+            fecha = "";
+        } else {
+            fecha = Character.toUpperCase(fecha.charAt(0)) + fecha.substring(1).toLowerCase();
+        }
+
+        fecha_reserva.setText(fecha);
+    }
 
     public static String setFormattedTime(Long time) {
         SimpleDateFormat newFormat = new SimpleDateFormat("H:mm:ss");
         return newFormat.format(new Date(time));
+    }
+
+    public Long setTimeAprox(long date1, long date2) {
+        long diferencia = (Math.abs(date1 - date2)) / 1000 / 60;
+        return diferencia;
     }
 
     @Override
@@ -284,6 +299,21 @@ public class ReservaFragment extends Fragment {
     }
 
     private void saveData(Reserva reserva)  {
-        DataService.getInstance().setReserva(reserva);
+        ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
+        Call<Reserva> callReserva = parkingApi.setReserva(reserva);
+        callReserva.enqueue(new Callback<Reserva>() {
+            @Override
+            public void onResponse(Call<Reserva> call, Response<Reserva> response) {
+                if (response != null) {
+                    Reserva reserva = response.body();
+                    ((MyApplication)getActivity().getApplicationContext()).setReservaId(reserva.getId());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Reserva> call, Throwable t) {
+
+            }
+        });
     }
 }

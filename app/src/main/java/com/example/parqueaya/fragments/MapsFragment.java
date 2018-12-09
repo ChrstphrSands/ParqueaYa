@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.*;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.parqueaya.R;
@@ -26,6 +28,7 @@ import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.Cochera;
 import com.example.parqueaya.services.DataService;
 import com.example.parqueaya.utils.PermissionUtils;
+import com.example.parqueaya.utils.ViewAnimation;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
@@ -57,6 +60,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private List<Cochera> cocheras;
 
     int location = -1;
+
 
     LocationManager locationManager;
     private SupportMapFragment mapFragment;
@@ -184,6 +188,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mMap.setMyLocationEnabled(true);
         }
     }
+
+
 
     //    @Override
     //    public boolean onMyLocationButtonClick() {

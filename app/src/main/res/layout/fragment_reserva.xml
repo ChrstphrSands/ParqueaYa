@@ -361,7 +361,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="60 mintuos"
+                            android:text="-- minutos"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
                             android:textColor="@color/green_400"
                             android:textStyle="bold"

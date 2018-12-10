@@ -3,7 +3,7 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/loginSignup1Background">
+            android:background="@drawable/fondo">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,47 +11,58 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="vertical">
-
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imageView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
             android:layout_marginBottom="50dp"
             android:layout_marginTop="50dp"
-            app:srcCompat="@mipmap/ic_diamond" />
+            android:src="@drawable/avatar" />
 
         <EditText
             android:id="@+id/nombre"
+            android:textSize="14dp"
             style="@style/LoginSignUp1Input"
+            android:background="@drawable/edittext_redond"
             android:hint="Nombre" />
 
         <EditText
             android:id="@+id/email"
+            android:textSize="14dp"
             style="@style/LoginSignUp1Input"
             android:hint="Email"
+            android:background="@drawable/edittext_redond"
+
             android:inputType="textEmailAddress" />
 
         <EditText
             android:id="@+id/password"
+            android:textSize="14dp"
             style="@style/LoginSignUp1Input"
+            android:background="@drawable/edittext_redond"
             android:hint="Contraseña"
             android:inputType="textPassword" />
 
         <EditText
             android:id="@+id/password_confirm"
             style="@style/LoginSignUp1Input"
+            android:textSize="14dp"
             android:hint="Confirmar Contraseña"
+            android:background="@drawable/edittext_redond"
             android:inputType="textPassword" />
 
         <Button
             android:id="@+id/btnCreateAccount"
             style="@style/ButtonOrange"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
+            android:layout_height="50dp"
+            android:textSize="16dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:layout_marginTop="30dp"
+            android:background="@drawable/btn_rounded_primary"
             android:onClick="onClick"
             android:text="Crear Cuenta"
             android:textAllCaps="false"

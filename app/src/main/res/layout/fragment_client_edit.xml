@@ -330,7 +330,7 @@
             app:layout_anchor="@id/lyt_form"
             app:layout_anchorGravity="top|end|right"
             app:rippleColor="@android:color/white"
-            app:srcCompat="@drawable/ic_photo_camera"
+            app:srcCompat="@drawable/ic_check_circle_white_24dp"
             android:id="@+id/cliente_foto"/>
 
     </android.support.design.widget.CoordinatorLayout>

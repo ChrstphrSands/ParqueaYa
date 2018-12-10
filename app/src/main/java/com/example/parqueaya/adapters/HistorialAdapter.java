@@ -11,21 +11,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.parqueaya.R;
-import com.example.parqueaya.models.Favorito;
+import com.example.parqueaya.models.Historial;
 
 import java.util.List;
 
-public class FavoritoAdapter extends RecyclerView.Adapter<FavoritoAdapter.ItemViewHolder> {
+public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.ItemViewHolder>{
 
-
-
-    private static List<Favorito> dataList;
+    private static List<Historial> dataList;
     private LayoutInflater mInflater;
     private Context context;
-    private FavoritoClickListener clicklistener = null;
+    private HistorialClickListener clicklistener = null;
     private final String URL_FOTO = "https://sistemaparqueo.azurewebsites.net/Uploads/Cocheras/";
 
-    public FavoritoAdapter(Context ctx, List<Favorito> data) {
+    public HistorialAdapter(Context ctx, List<Historial> data) {
         context = ctx;
         dataList = data;
         mInflater = LayoutInflater.from(context);
@@ -52,19 +50,19 @@ public class FavoritoAdapter extends RecyclerView.Adapter<FavoritoAdapter.ItemVi
             eliminar = itemView.findViewById(R.id.favorito_eliminar);
             favorito_id = itemView.findViewById(R.id.favorito_id);
 
-//            eliminar.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    int pos = getAdapterPosition() + 1;
-//                    Favorito favorito = new Favorito();
-//                    int id = favorito_id.getId();
-//
-//                    favorito.setId(id);
-//
-//                    Toast.makeText(context, "Button Shopping Cart " + pos + " clicked!" + favorito_id, Toast.LENGTH_SHORT).show();
-//                    MainActivity.reservaRoomDatabase.favoritoDao().delete(favorito);
-//                }
-//            });
+            //            eliminar.setOnClickListener(new View.OnClickListener() {
+            //                @Override
+            //                public void onClick(View v) {
+            //                    int pos = getAdapterPosition() + 1;
+            //                    Favorito favorito = new Favorito();
+            //                    int id = favorito_id.getId();
+            //
+            //                    favorito.setId(id);
+            //
+            //                    Toast.makeText(context, "Button Shopping Cart " + pos + " clicked!" + favorito_id, Toast.LENGTH_SHORT).show();
+            //                    MainActivity.reservaRoomDatabase.favoritoDao().delete(favorito);
+            //                }
+            //            });
         }
 
         @Override
@@ -73,20 +71,20 @@ public class FavoritoAdapter extends RecyclerView.Adapter<FavoritoAdapter.ItemVi
         }
     }
 
-    public void setClickListener(FavoritoClickListener listener) {
+    public void setClickListener(HistorialClickListener listener) {
         this.clicklistener = listener;
     }
 
     @NonNull
     @Override
-    public ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public HistorialAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_favorito, parent, false);
-        ItemViewHolder itemViewHolder = new ItemViewHolder(view);
+        HistorialAdapter.ItemViewHolder itemViewHolder = new HistorialAdapter.ItemViewHolder(view);
         return itemViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HistorialAdapter.ItemViewHolder holder, int position) {
         Glide.with(context)
             .load(URL_FOTO + dataList.get(position).getFoto())
             .thumbnail(0.01f)
@@ -103,4 +101,5 @@ public class FavoritoAdapter extends RecyclerView.Adapter<FavoritoAdapter.ItemVi
     public int getItemCount() {
         return dataList.size();
     }
+
 }

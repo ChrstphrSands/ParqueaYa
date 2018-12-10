@@ -34,6 +34,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/cliente_foto"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:srcCompat="@drawable/ic_person"/>
@@ -93,8 +94,7 @@
                             android:layout_height="@dimen/spacing_mxlarge"
                             android:layout_marginTop="@dimen/spacing_mlarge"
                             android:background="@android:color/transparent"
-                            android:tint="@color/grey_60"
-                            app:srcCompat="@drawable/ic_person"/>
+                            android:tint="@color/grey_60"/>
 
                         <View
                             android:layout_width="@dimen/spacing_large"
@@ -249,8 +249,7 @@
                             android:layout_height="@dimen/spacing_mxlarge"
                             android:layout_marginTop="@dimen/spacing_mlarge"
                             android:background="@android:color/transparent"
-                            android:tint="@color/grey_60"
-                            app:srcCompat="@drawable/ic_phone"/>
+                            android:tint="@color/grey_60"/>
 
                         <View
                             android:layout_width="@dimen/spacing_large"
@@ -313,6 +312,39 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/spacing_large"/>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/imageButton4"
+                            android:layout_width="@dimen/spacing_mxlarge"
+                            android:layout_height="@dimen/spacing_mxlarge"
+                            android:layout_marginTop="@dimen/spacing_mlarge"
+                            android:background="@android:color/transparent"
+                            android:tint="@color/grey_60"
+                            app:srcCompat="@drawable/ic_car"/>
+
+                        <View
+                            android:layout_width="@dimen/spacing_large"
+                            android:layout_height="match_parent"/>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColorHint="@color/grey_40">
+
+                            <android.support.v7.widget.AppCompatEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Ingrese sus vehiculos separados por comas"
+                                android:id="@+id/cliente_vehiculos"/>
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -331,7 +363,7 @@
             app:layout_anchorGravity="top|end|right"
             app:rippleColor="@android:color/white"
             app:srcCompat="@drawable/ic_photo_camera"
-            android:id="@+id/cliente_foto"/>
+            android:id="@+id/cliente_guardar"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    android:id="@+id/container_reserva"
+    xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -250,25 +252,29 @@
 
                         </LinearLayout>
 
+
+
                     </android.support.v7.widget.CardView>
 
                 </LinearLayout>
 
             </android.support.v4.widget.NestedScrollView>
 
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/calificar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_large"
+                app:backgroundTint="@color/red_400"
+                app:elevation="0dp"
+                android:tint="@color/transparent"
+                app:fabSize="normal"
+                android:layout_gravity="right|end"
+                app:srcCompat="@drawable/ic_star">
+            </android.support.design.widget.FloatingActionButton>
+
         </android.support.v7.widget.CardView>
 
-        <!--<android.support.design.widget.FloatingActionButton-->
-            <!--android:id="@+id/fab"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="@dimen/spacing_large"-->
-            <!--app:backgroundTint="@color/overlay_light_30"-->
-            <!--app:elevation="0dp"-->
-            <!--app:fabSize="normal"-->
-            <!--app:srcCompat="@drawable/ic_favorite">-->
-
-        <!--</android.support.design.widget.FloatingActionButton>-->
 
     </LinearLayout>
 

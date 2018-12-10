@@ -22,27 +22,36 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
-import com.example.parqueaya.fragments.FavoritoFragment;
+import com.bumptech.glide.Glide;
 import com.example.parqueaya.MyApplication;
+import com.example.parqueaya.R;
+import com.example.parqueaya.api.ParkingApi;
+import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.dataSource.FavoritoDataSource;
 import com.example.parqueaya.dataSource.FavoritoRepository;
 import com.example.parqueaya.dataSource.ReservaRoomDatabase;
 import com.example.parqueaya.fragments.ClientDetailFragment;
+import com.example.parqueaya.fragments.FavoritoFragment;
 import com.example.parqueaya.fragments.MapsFragment;
-import com.example.parqueaya.R;
 import com.example.parqueaya.fragments.ReservaDetailFragment;
+import com.example.parqueaya.models.Cliente;
 import com.example.parqueaya.utils.Common;
 import com.example.parqueaya.utils.Tools;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener,
@@ -54,9 +63,14 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private GoogleMap mMap;
     private MapsFragment mainFragment;
     public static ReservaRoomDatabase reservaRoomDatabase;
+    private Cliente cliente;
 
     final int PERMISSION_LOCATION = 111;
     private final static int LOADING_DURATION = 3500;
+
+    private TextView header_nombre;
+    private TextView header_direccion;
+    private CircleImageView header_foto;
 
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
@@ -75,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
             .build();
 
         authFirebase();
+
+        getCliente();
         initToolbar();
         initNavigationMenu();
         initBottomNavigation();
@@ -86,12 +102,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null) {
 
-                } else {
-
-                }
             }
         };
 
@@ -216,6 +227,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
         NavigationView nav_view = findViewById(R.id.nav_view);
         final DrawerLayout drawer = findViewById(R.id.drawer_layout);
+
+
+        header_nombre = nav_view.getHeaderView(0).findViewById(R.id.header_nombre);
+        header_direccion = nav_view.getHeaderView(0).findViewById(R.id.header_direccion);
+        header_foto = nav_view.getHeaderView(0).findViewById(R.id.header_foto);
+
+        header_direccion.setTextColor(getResources().getColor(R.color.blue_700));
+        header_direccion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (firebaseUser == null) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Ya estas logueado", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name
             , R.string.app_name) {
             public void onDrawerOpened(View drawerView) {
@@ -419,6 +449,37 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                 FavoritoDataSource.getInstance(
                     Common.reservaRoomDatabase.favoritoDao()
                 ));
+    }
+
+    private void getCliente() {
+        final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+            ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
+            Call<Cliente> call = parkingApi.getClienteDetail(firebaseUser.getUid());
+
+            call.enqueue(new Callback<Cliente>() {
+                @Override
+                public void onResponse(Call<Cliente> call, Response<Cliente> response) {
+                    if (response != null) {
+                        cliente = response.body();
+                        assert cliente != null;
+                        header_nombre.setText(cliente.getNombre());
+                        header_direccion.setText(cliente.getEmail());
+                        Glide.with(getApplicationContext())
+                            .load(firebaseUser.getPhotoUrl())
+                            .centerCrop()
+                            .into(header_foto);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Cliente> call, Throwable t) {
+
+                }
+            });
+        }
+
     }
 
 }

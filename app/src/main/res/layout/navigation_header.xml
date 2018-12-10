@@ -16,22 +16,22 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/name"
+            android:id="@+id/header_nombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:gravity="center_horizontal"
-            android:text="Michael Angelo"
+            android:text="Invitado"
             android:textSize="26sp"/>
 
         <TextView
-            android:id="@+id/address"
+            android:id="@+id/header_direccion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/name"
+            android:layout_below="@+id/header_nombre"
             android:layout_marginTop="4dp"
             android:gravity="center_horizontal"
-            android:text="Manhattan, NY"/>
+            android:text="Iniciar Sesion"/>
     </LinearLayout>
 
     <RelativeLayout
@@ -40,15 +40,8 @@
         android:layout_height="100dp"
         android:layout_marginTop="80dp">
 
-        <!--<com.mediatechindo.wahyu.materialuikit.tools.RoundedImageView-->
-        <!--android:id="@+id/imageView"-->
-        <!--android:layout_width="72dp"-->
-        <!--android:layout_height="72dp"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_centerVertical="true"-->
-        <!--android:src="@drawable/profiile_pic" />-->
-
         <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/header_foto"
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_centerHorizontal="true"

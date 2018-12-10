@@ -11,12 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.bumptech.glide.Glide;
 import com.example.parqueaya.R;
 import com.example.parqueaya.api.ParkingApi;
 import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.Cliente;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mikhaellopez.circularimageview.CircularImageView;
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,6 +47,8 @@ public class ClientDetailFragment extends Fragment {
     private TextView clienteCelular;
     private TextView clienteTelefono;
     private TextView clienteDireccion;
+    private CircularImageView clienteFoto;
+    private String urlFoto;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +71,7 @@ public class ClientDetailFragment extends Fragment {
         clienteCelular = view.findViewById(R.id.client_detail_celular);
         clienteTelefono = view.findViewById(R.id.client_detail_telefono);
         clienteDireccion = view.findViewById(R.id.cliente_detail_direccion);
+        clienteFoto = view.findViewById(R.id.cliente_detail_foto);
     }
 
     private void authFirebase() {
@@ -73,7 +79,7 @@ public class ClientDetailFragment extends Fragment {
         authStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                final FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
                 if (firebaseUser != null) {
                     parkingApi = RetrofitInstance.createService(ParkingApi.class);
 
@@ -84,7 +90,13 @@ public class ClientDetailFragment extends Fragment {
                         public void onResponse(Call<Cliente> call, Response<Cliente> response) {
                             if (response.isSuccessful() && response.code() == 200) {
                                 cliente = response.body();
+                                assert cliente != null;
                                 setData(cliente);
+                                Glide.with(getActivity())
+                                    .load(firebaseUser.getPhotoUrl())
+                                    .centerCrop()
+                                    .into(clienteFoto);
+                                urlFoto = String.valueOf(firebaseUser.getPhotoUrl());
                             }
                         }
 
@@ -136,6 +148,7 @@ public class ClientDetailFragment extends Fragment {
                 ClientEdiFragment clientEditFragment = new ClientEdiFragment();
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("cliente", cliente);
+                bundle.putString("foto", urlFoto);
                 clientEditFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, clientEditFragment)

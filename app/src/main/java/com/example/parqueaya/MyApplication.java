@@ -6,9 +6,27 @@ public class MyApplication extends Application {
     private int reservaId;
     private int vehiculoId;
     private double precio_aproximado;
+    private int cochera_id;
+    private int cliente_id;
     private String placa;
     private String nombre;
     private String fecha;
+
+    public int getCochera_id() {
+        return cochera_id;
+    }
+
+    public void setCochera_id(int cochera_id) {
+        this.cochera_id = cochera_id;
+    }
+
+    public int getCliente_id() {
+        return cliente_id;
+    }
+
+    public void setCliente_id(int cliente_id) {
+        this.cliente_id = cliente_id;
+    }
 
     public String getFecha() {
         return fecha;

@@ -3,10 +3,7 @@ package com.example.parqueaya.services;
 import android.util.Log;
 import com.example.parqueaya.api.ParkingApi;
 import com.example.parqueaya.api.RetrofitInstance;
-import com.example.parqueaya.models.Cliente;
-import com.example.parqueaya.models.Cochera;
-import com.example.parqueaya.models.Reserva;
-import com.example.parqueaya.models.Servicio;
+import com.example.parqueaya.models.*;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -180,6 +177,23 @@ public class DataService {
             @Override
             public void onFailure(Call<Cliente> call, Throwable t) {
                 Log.d("Update", String.valueOf(t.getCause()));
+            }
+        });
+    }
+
+    public void setVehiculo(Vehiculo vehiculo) {
+        ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
+        Call<Vehiculo> call= parkingApi.setVehiculo(vehiculo);
+
+        call.enqueue(new Callback<Vehiculo>() {
+            @Override
+            public void onResponse(Call<Vehiculo> call, Response<Vehiculo> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<Vehiculo> call, Throwable t) {
+
             }
         });
     }

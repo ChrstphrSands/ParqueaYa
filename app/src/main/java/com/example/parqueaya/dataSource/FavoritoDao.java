@@ -20,6 +20,12 @@ public interface FavoritoDao {
     @Insert
     void insertFavorito(Favorito favoritos);
 
+    @Query("DELETE FROM favorito WHERE id=:id")
+    void deleteById(int id);
+
+    @Delete
+    void deletes(Favorito favorito);
+
     @Delete
     void delete(Favorito favorito);
 }

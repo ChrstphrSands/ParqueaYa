@@ -18,17 +18,16 @@
             android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/transparent"
             app:expandedTitleTextAppearance="@style/TextAppearance.AppCompat.Headline"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:titleEnabled="false">
 
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/cochera_foto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/image_8"
                 app:layout_collapseMode="parallax"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
@@ -47,7 +46,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:background="@color/colorPrimary"
+            android:backgroundTint="@color/transparent"
             app:contentInsetStartWithNavigation="0dp"
             app:layout_collapseMode="pin"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
@@ -67,7 +66,7 @@
                     android:layout_height="wrap_content"
                     android:text="Roll-Up Neocity Backpack"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textColor="@android:color/white"/>
+                    android:textColor="@color/grey_80"/>
 
                 <TextView
                     android:id="@+id/cochera_horario"
@@ -75,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_medium"
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                    android:textColor="@color/grey_10"/>
+                    android:textColor="@color/grey_60"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -101,7 +100,7 @@
                         android:layout_marginStart="@dimen/spacing_medium"
                         android:text="381,380"
                         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                        android:textColor="@color/grey_10"/>
+                        android:textColor="@color/grey_40"/>
 
                     <View
                         android:layout_width="0dp"
@@ -114,7 +113,7 @@
                         android:layout_height="wrap_content"
                         android:text="$ 80.00"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/grey_60"
                         android:textStyle="bold"/>
 
                 </LinearLayout>
@@ -349,12 +348,7 @@
 
                 </LinearLayout>
 
-
-
             </LinearLayout>
-
-
-
 
         </android.support.v4.widget.NestedScrollView>
 
@@ -363,11 +357,11 @@
 
 
     <com.balysv.materialripple.MaterialRippleLayout
-        android:id="@+id/lyt_next"
+        android:id="@+id/cochera_reservar"
         style="@style/RippleStyleWhite"
         android:layout_width="match_parent"
         android:layout_height="@dimen/spacing_xxlarge"
-        android:background="@color/red_300"
+        android:background="@color/indigo_400"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
         <LinearLayout
@@ -377,13 +371,6 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Submit Order"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
-                android:textColor="@android:color/white" />
-
             <ImageView
                 android:layout_width="@dimen/spacing_smlarge"
                 android:layout_height="@dimen/spacing_smlarge"
@@ -392,12 +379,19 @@
                 android:tint="@android:color/white"
                 app:srcCompat="@drawable/ic_person" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="R E S E R V A R"
+                android:textSize="14sp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2"
+                android:textColor="@android:color/white" />
         </LinearLayout>
 
     </com.balysv.materialripple.MaterialRippleLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/cochera_favorito"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_large"

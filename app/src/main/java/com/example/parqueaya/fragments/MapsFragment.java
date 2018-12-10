@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.*;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
@@ -19,23 +18,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.example.parqueaya.R;
 import com.example.parqueaya.api.ParkingApi;
 import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.Cochera;
 import com.example.parqueaya.services.DataService;
 import com.example.parqueaya.utils.PermissionUtils;
-import com.example.parqueaya.utils.ViewAnimation;
 import com.google.android.gms.maps.*;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +91,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         cochera_telefono = view.findViewById(R.id.cochera_telefono);
         cochera_horario = view.findViewById(R.id.cochera_horario);
 
-        fabReserve = view.findViewById(R.id.fab_reserve);
+        fabReserve = view.findViewById(R.id.fab_reservar);
         fabReserve.setEnabled(false);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -132,16 +126,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-        view.findViewById(R.id.fab_directions).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                try {
-                    //                    mMap.animateCamera(zoomingLocation());
-                } catch (Exception e) {
-                }
-            }
-        });
+//        view.findViewById(R.id.fab_directions).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+//                try {
+//                    //                    mMap.animateCamera(zoomingLocation());
+//                } catch (Exception e) {
+//                }
+//            }
+//        });
     }
 
     private void showBottomSheet() {
@@ -156,7 +150,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     }
 
     private void showDetalleCochera(View view) {
-        view.findViewById(R.id.fab_reserve).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fab_reservar).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
@@ -247,7 +241,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
         } catch (IOException exception) {
 
         }
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
     }
 
     private void updateMap(int zipcode) {

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
-    android:background="@color/blue_grey_700"
+    android:background="@color/red_300"
     app:itemIconTint="@drawable/color_state_white_2"
     app:itemTextColor="@drawable/color_state_white_2"
     app:menu="@menu/menu_bottom_navigation_shifting"

@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface IFavoritoDataSource {
 
-    Flowable<List<Favorito>> getFavoritos();
+    List<Favorito> getFavoritos();
 
     int isFavorito(int itemId);
 
-    void insertFavorito(Favorito... favoritos);
+    void insertFavorito(Favorito favoritos);
 
     void delete(Favorito favorito);
 

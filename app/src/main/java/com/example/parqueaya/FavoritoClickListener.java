@@ -1,4 +1,7 @@
 package com.example.parqueaya;
 
-public class FavoritoClickListener {
+import android.view.View;
+
+public interface FavoritoClickListener {
+    void itemClicked(View view, int position);
 }

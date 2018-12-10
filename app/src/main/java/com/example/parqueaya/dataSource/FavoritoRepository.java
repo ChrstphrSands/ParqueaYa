@@ -24,7 +24,7 @@ public class FavoritoRepository implements IFavoritoDataSource {
     }
 
     @Override
-    public Flowable<List<Favorito>> getFavoritos() {
+    public List<Favorito> getFavoritos() {
         return favoritoDataSource.getFavoritos();
     }
 
@@ -34,7 +34,7 @@ public class FavoritoRepository implements IFavoritoDataSource {
     }
 
     @Override
-    public void insertFavorito(Favorito... favoritos) {
+    public void insertFavorito(Favorito favoritos) {
         favoritoDataSource.insertFavorito(favoritos);
     }
 

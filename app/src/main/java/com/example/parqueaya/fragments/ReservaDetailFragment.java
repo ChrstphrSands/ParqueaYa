@@ -4,20 +4,16 @@ package com.example.parqueaya.fragments;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;
 import com.example.parqueaya.MyApplication;
 import com.example.parqueaya.R;
-import com.example.parqueaya.activities.LoginActivity;
 import com.example.parqueaya.api.ParkingApi;
 import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.Cliente;
@@ -28,6 +24,9 @@ import com.google.zxing.WriterException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReservaDetailFragment extends Fragment {
 
@@ -42,6 +41,7 @@ public class ReservaDetailFragment extends Fragment {
     private TextView detalleEstado;
     private TextView detalleCliente;
     private ImageView detalleQr;
+    private FloatingActionButton calificar;
 
     private Reserva reserva;
     private String fecha;
@@ -55,6 +55,11 @@ public class ReservaDetailFragment extends Fragment {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
+
+    private ListView listView;
+    private TextView txt_no_item;
+    private List<String> items = new ArrayList<>();
+    private ArrayAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,6 +97,16 @@ public class ReservaDetailFragment extends Fragment {
         detalleEstado = view.findViewById(R.id.detalle_reserva_estado);
         detalleCliente = view.findViewById(R.id.detalle_reserva_cliente);
         detalleQr = view.findViewById(R.id.detalle_reserva_qr);
+        calificar = view.findViewById(R.id.calificar);
+
+        calificar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDialog dialog = new CustomDialog();
+                dialog.show(getActivity().getFragmentManager(), "CustomDialog");
+            }
+        });
+
     }
 
     private void setData() {
@@ -152,4 +167,6 @@ public class ReservaDetailFragment extends Fragment {
         super.onStop();
         mAuth.removeAuthStateListener(authStateListener);
     }
+
+
 }

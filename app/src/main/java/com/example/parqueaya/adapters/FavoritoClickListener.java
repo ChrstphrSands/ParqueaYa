@@ -1,4 +1,4 @@
-package com.example.parqueaya;
+package com.example.parqueaya.adapters;
 
 import android.view.View;
 

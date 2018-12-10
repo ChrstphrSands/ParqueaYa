@@ -7,6 +7,9 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "favorito")
 public class Favorito {
 
+    public Favorito() {
+    }
+
     @PrimaryKey
     @ColumnInfo(name = "id")
     private int id;

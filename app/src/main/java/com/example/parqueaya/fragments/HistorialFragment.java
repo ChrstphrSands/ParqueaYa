@@ -1,7 +1,6 @@
 package com.example.parqueaya.fragments;
 
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,23 +9,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.example.parqueaya.adapters.FavoritoClickListener;
+
 import com.example.parqueaya.R;
-import com.example.parqueaya.activities.MainActivity;
 import com.example.parqueaya.adapters.FavoritoAdapter;
-import com.example.parqueaya.models.Favorito;
+import com.example.parqueaya.adapters.HistorialClickListener;
+import com.example.parqueaya.models.Historial;
 
 import java.util.List;
 
-@SuppressLint("ValidFragment")
-public class FavoritoFragment extends Fragment implements FavoritoClickListener {
+public class HistorialFragment extends Fragment  implements HistorialClickListener {
+
+
+    public HistorialFragment() {
+        // Required empty public constructor
+    }
 
     private Context context;
-    private FavoritoAdapter rcAdapter;
+    private HistorialAdapter rcAdapter;
     private RecyclerView rView;
-
-    public FavoritoFragment() {
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,18 +46,8 @@ public class FavoritoFragment extends Fragment implements FavoritoClickListener 
         return view;
     }
 
-
-    private void getFavorites() {
-
-        List<Favorito> favoritos;
-
-        favoritos = MainActivity.reservaRoomDatabase.favoritoDao().getFavoritos();
-
-        displayFavoritoItems(favoritos);
-    }
-
-    private void displayFavoritoItems(List<Favorito> favoritos) {
-        rcAdapter = new FavoritoAdapter(getContext(), favoritos);
+    private void displayFavoritoItems(List<Historial> historial) {
+        rcAdapter = new FavoritoAdapter(getContext(), historial);
         rView.setAdapter(rcAdapter);
         rcAdapter.setClickListener(this);
     }

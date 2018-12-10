@@ -87,13 +87,14 @@
                         style="@style/Yellow.Small.AppCompatRatingBar.White"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="false"
+                        android:clickable="true"
                         android:numStars="5"
-                        android:rating="3.5"
                         android:stepSize="1"
-                        android:theme="@style/Yellow.Small.AppCompatRatingBar.White"/>
+                        android:theme="@style/Yellow.Small.AppCompatRatingBar.White"
+                        android:focusable="true"/>
 
                     <TextView
+                        android:id="@+id/cochera_total"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/spacing_medium"
@@ -111,7 +112,7 @@
                         android:id="@+id/cochera_precio"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$ 80.00"
+                        android:text=""
                         android:textAppearance="@style/TextAppearance.AppCompat.Large"
                         android:textColor="@color/grey_60"
                         android:textStyle="bold"/>

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.example.parqueaya.MyApplication;
 import com.example.parqueaya.R;
+import com.example.parqueaya.activities.MainActivity;
 import com.example.parqueaya.api.ParkingApi;
 import com.example.parqueaya.api.RetrofitInstance;
 import com.example.parqueaya.models.*;
@@ -111,6 +112,19 @@ public class ReservaFragment extends Fragment {
                     setFormattedTime(salida), "");
                 saveData(reserva);
 
+                Historial historial = new Historial();
+                historial.setCliente_id(cliente.getCliente_id());
+                historial.setNombre(cliente.getNombre());
+                historial.setNombre_cochera(cochera.getNombre());
+                historial.setFecha_reserva(fecha);
+                historial.setTotal(String.valueOf(precio_aproximado.getText().toString()));
+                historial.setTiempo_reserva(String.valueOf(tiempo_aproximado.getText().toString()));
+                historial.setPlaca(placa);
+
+                MainActivity.reservaRoomDatabase.historialDao().insertHistorial(historial);
+
+                ((MyApplication)getActivity().getApplicationContext()).setCliente_id(cliente.getCliente_id());
+                ((MyApplication)getActivity().getApplicationContext()).setCochera_id(cochera.getCocheraId());
                 ((MyApplication)getActivity().getApplicationContext()).setNombre(cliente.getNombre());
                 ((MyApplication)getActivity().getApplicationContext()).setPlaca(placa);
                 ((MyApplication)getActivity().getApplicationContext()).setFecha(fecha);

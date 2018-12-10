@@ -1,9 +1,6 @@
 package com.example.parqueaya.api;
 
-import com.example.parqueaya.models.Cliente;
-import com.example.parqueaya.models.Cochera;
-import com.example.parqueaya.models.Reserva;
-import com.example.parqueaya.models.Servicio;
+import com.example.parqueaya.models.*;
 import retrofit2.Call;
 import retrofit2.http.*;
 
@@ -36,4 +33,7 @@ public interface ParkingApi {
 
     @POST("reservas")
     Call<Reserva> setReserva(@Body Reserva reserva);
+
+    @POST("vehiculos")
+    Call<Vehiculo> setVehiculo(@Body Vehiculo vehiculo);
 }

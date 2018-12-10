@@ -3,19 +3,20 @@ package com.example.parqueaya.fragments;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
+import com.bumptech.glide.Glide;
 import com.example.parqueaya.R;
 import com.example.parqueaya.models.Cliente;
-import com.example.parqueaya.models.Reserva;
 import com.example.parqueaya.models.Vehiculo;
 import com.example.parqueaya.services.DataService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ClientEdiFragment extends Fragment implements View.OnClickListener {
@@ -30,8 +31,11 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
     private EditText cliente_telefono;
     private EditText cliente_direccion;
     private FloatingActionButton guardar;
+    private ImageView cliente_foto;
+    private EditText cliente_vehiculos;
 
-    String uid;
+    private String uid;
+    private String urlFoto;
 
     public ClientEdiFragment() {
         // Required empty public constructor
@@ -44,6 +48,7 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
         View view = inflater.inflate(R.layout.fragment_client_edit, container, false);
 
         cliente = (Cliente) getArguments().getSerializable("cliente");
+        urlFoto = getArguments().getString("foto");
         uid = cliente.getUID();
         initComponents(view);
         setData();
@@ -58,7 +63,9 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
         cliente_celular = view.findViewById(R.id.cliente_celular);
         cliente_telefono = view.findViewById(R.id.cliente_telefono);
         cliente_direccion = view.findViewById(R.id.cliente_direccion);
-        guardar = view.findViewById(R.id.cliente_foto);
+        cliente_foto = view.findViewById(R.id.cliente_foto);
+        cliente_vehiculos = view.findViewById(R.id.cliente_vehiculos);
+        guardar = view.findViewById(R.id.cliente_guardar);
 
         guardar.setOnClickListener(this);
     }
@@ -71,9 +78,26 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
         cliente_celular.setText(String.valueOf(cliente.getCelular()));
         cliente_telefono.setText(String.valueOf(cliente.getTelefono()));
         cliente_direccion.setText(cliente.getDireccion());
+        Glide.with(getContext())
+            //        BuildConfig.IMAGE_URL + dataList.get(position).getImageUrl()
+            .load(urlFoto)
+            .centerCrop()
+            .into(cliente_foto);
+
+        StringBuffer result = new StringBuffer();
+        for (int i = 0; i < cliente.getVehiculos().size(); i++) {
+            result.append(cliente.getVehiculos().get(i).getPlaca()+ ", ");
+        }
+        String vehiculos = result.toString().trim();
+
+        if (vehiculos.endsWith(",")) {
+            vehiculos = vehiculos.substring(0, vehiculos.length() - 1);
+        }
+
+        cliente_vehiculos.setText(vehiculos);
     }
 
-    private void saveData()  {
+    private void saveData() {
 
         String nombre = String.valueOf(cliente_nombre.getText());
         String apellido = String.valueOf(cliente_apellido.getText());
@@ -84,16 +108,34 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
         String direccion = String.valueOf(cliente_direccion.getText());
         List<Vehiculo> vehiculos = new ArrayList<>();
 
+        String placas = String.valueOf(cliente_vehiculos.getText());
+        Log.d("Vehiculoss", placas);
+
+        saveVehiculos(placas);
+
         cliente = new Cliente(cliente.getCliente_id(), apellido, direccion, celular, telefono, nombre, dni, email, uid);
         Log.d("Cliente", String.valueOf(cliente));
 
         DataService.getInstance().updateCliente(cliente.getCliente_id(), cliente);
     }
 
+    private void saveVehiculos(String vehiculos) {
+        List<String> list = new ArrayList<>(Arrays.asList(vehiculos.split(", ")));
+
+        Vehiculo vehiculo;
+
+        for (int i = 0; i < list.size(); i++) {
+            vehiculo = new Vehiculo(list.get(i), 4, cliente.getCliente_id());
+            DataService.getInstance().setVehiculo(vehiculo);
+        }
+
+
+    }
+
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.cliente_foto) {
+        if (i == R.id.cliente_guardar) {
             saveData();
             ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
             getActivity().getSupportFragmentManager().beginTransaction()

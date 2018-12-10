@@ -11,8 +11,22 @@
 
     <include layout="@layout/sheet_detail_cochera" />
 
+    <!--<android.support.design.widget.FloatingActionButton-->
+        <!--android:id="@+id/fab_directions"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="@dimen/spacing_smlarge"-->
+        <!--android:clickable="true"-->
+        <!--android:tint="@android:color/white"-->
+        <!--app:fabSize="normal"-->
+        <!--android:layout_marginBottom="0dp"-->
+        <!--app:layout_anchor="@id/bottom_sheet"-->
+        <!--app:layout_anchorGravity="top|end"-->
+        <!--app:rippleColor="@android:color/white"-->
+        <!--app:srcCompat="@drawable/ic_pin_drop" />-->
+
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_directions"
+        android:id="@+id/fab_reservar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/spacing_smlarge"
@@ -23,20 +37,7 @@
         app:layout_anchor="@id/bottom_sheet"
         app:layout_anchorGravity="top|end"
         app:rippleColor="@android:color/white"
-        app:srcCompat="@drawable/ic_pin_drop" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_reserve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_smlarge"
-        android:clickable="true"
-        android:tint="@android:color/white"
-        app:fabSize="normal"
-        android:layout_marginBottom="0dp"
-        app:layout_anchor="@id/bottom_sheet"
-        app:layout_anchorGravity="top|start"
-        app:rippleColor="@android:color/white"
+        android:backgroundTint="@color/red_400"
         app:srcCompat="@drawable/ic_assignment" />
 
 </android.support.design.widget.CoordinatorLayout>

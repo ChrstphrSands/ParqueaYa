@@ -1,7 +1,6 @@
 package com.example.parqueaya.dataSource;
 
 import com.example.parqueaya.models.Favorito;
-import io.reactivex.Flowable;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class FavoritoDataSource implements IFavoritoDataSource {
     }
 
     @Override
-    public Flowable<List<Favorito>> getFavoritos() {
+    public List<Favorito> getFavoritos() {
         return favoritoDao.getFavoritos();
     }
 
@@ -32,7 +31,7 @@ public class FavoritoDataSource implements IFavoritoDataSource {
     }
 
     @Override
-    public void insertFavorito(Favorito... favoritos) {
+    public void insertFavorito(Favorito favoritos) {
         favoritoDao.insertFavorito(favoritos);
     }
 

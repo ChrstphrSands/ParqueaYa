@@ -1,11 +1,11 @@
 package com.example.parqueaya.activities;
 
 import android.Manifest;
+import android.arch.persistence.room.Room;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
@@ -22,8 +22,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.Toast;
+import com.example.parqueaya.fragments.FavoritoFragment;
 import com.example.parqueaya.MyApplication;
 import com.example.parqueaya.dataSource.FavoritoDataSource;
 import com.example.parqueaya.dataSource.FavoritoRepository;
@@ -34,7 +34,6 @@ import com.example.parqueaya.R;
 import com.example.parqueaya.fragments.ReservaDetailFragment;
 import com.example.parqueaya.utils.Common;
 import com.example.parqueaya.utils.Tools;
-import com.example.parqueaya.utils.ViewAnimation;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.GoogleMap;
@@ -54,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private Toolbar toolbar;
     private GoogleMap mMap;
     private MapsFragment mainFragment;
+    public static ReservaRoomDatabase reservaRoomDatabase;
 
     final int PERMISSION_LOCATION = 111;
     private final static int LOADING_DURATION = 3500;
@@ -69,11 +69,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        reservaRoomDatabase = Room.databaseBuilder(getApplicationContext(), ReservaRoomDatabase.class, "parqueo.db")
+            .fallbackToDestructiveMigration()
+            .allowMainThreadQueries()
+            .build();
+
         authFirebase();
         initToolbar();
         initNavigationMenu();
         initBottomNavigation();
-        initDB();
         initMap();
     }
 
@@ -153,25 +157,25 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
         mAuth.addAuthStateListener(authStateListener);
     }
 
-//    private void loadingAndDisplayContent() {
-//        final LinearLayout lyt_progress = (LinearLayout) findViewById(R.id.lyt_progress);
-//        lyt_progress.setVisibility(View.VISIBLE);
-//        lyt_progress.setAlpha(1.0f);
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                ViewAnimation.fadeOut(lyt_progress);
-//            }
-//        }, LOADING_DURATION);
-//
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        }, LOADING_DURATION + 400);
-//    }
+    //    private void loadingAndDisplayContent() {
+    //        final LinearLayout lyt_progress = (LinearLayout) findViewById(R.id.lyt_progress);
+    //        lyt_progress.setVisibility(View.VISIBLE);
+    //        lyt_progress.setAlpha(1.0f);
+    //
+    //        new Handler().postDelayed(new Runnable() {
+    //            @Override
+    //            public void run() {
+    //                ViewAnimation.fadeOut(lyt_progress);
+    //            }
+    //        }, LOADING_DURATION);
+    //
+    //        new Handler().postDelayed(new Runnable() {
+    //            @Override
+    //            public void run() {
+    //
+    //            }
+    //        }, LOADING_DURATION + 400);
+    //    }
 
     @Override
     protected void onStop() {
@@ -239,10 +243,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                         break;
                     case R.id.nav_favorite:
                         if (firebaseUser != null) {
-                            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
+                            FavoritoFragment favoritoFragment = new FavoritoFragment();
                             FragmentManager fragmentManager = getSupportFragmentManager();
                             fragmentManager.beginTransaction()
-                                .replace(R.id.container, clientDetailFragment)
+                                .replace(R.id.container, favoritoFragment)
                                 .addToBackStack(null)
                                 .commit();
                         } else {
@@ -269,25 +273,35 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     private void initBottomNavigation() {
         navigationView = findViewById(R.id.navigation);
         final FirebaseUser firebaseUser = mAuth.getCurrentUser();
-        navigationView.setBackgroundColor(getResources().getColor(R.color.pink_800));
+        navigationView.setBackgroundColor(getResources().getColor(R.color.red_400));
         navigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_map:
-                        navigationView.setBackgroundColor(getResources().getColor(R.color.pink_800));
+                        navigationView.setBackgroundColor(getResources().getColor(R.color.red_400));
                         intent = new Intent(MainActivity.this, MainActivity.class);
                         startActivity(intent);
                         return true;
                     case R.id.navigation_favorite:
-                        navigationView.setBackgroundColor(getResources().getColor(R.color.amber_100));
-                        intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
+                        if (firebaseUser != null) {
+                            navigationView.setBackgroundColor(getResources().getColor(R.color.green_700));
+                            FavoritoFragment favoritoFragment = new FavoritoFragment();
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                .replace(R.id.container, favoritoFragment)
+                                .addToBackStack(null)
+                                .commit();
+                            Toast.makeText(MainActivity.this, "No tienes favoritos", Toast.LENGTH_SHORT).show();
+                            return true;
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Debes de estar registrado para ver tus favoritos",
+                                Toast.LENGTH_SHORT).show();
+                        }
                         break;
                     case R.id.navigation_books:
-
                         if (firebaseUser != null) {
-                            navigationView.setBackgroundColor(getResources().getColor(R.color.amber_100));
+                            navigationView.setBackgroundColor(getResources().getColor(R.color.blue_700));
 
                             int reservaId = ((MyApplication) getApplicationContext()).getReservaId();
 
@@ -299,13 +313,15 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
                                     .replace(R.id.container, reservaDetailFragment)
                                     .addToBackStack(null)
                                     .commit();
-                                break;
+                                return true;
                             } else {
                                 Toast.makeText(MainActivity.this, "No tienes reservas", Toast.LENGTH_SHORT).show();
                             }
+                            return true;
                         } else {
                             Toast.makeText(getApplicationContext(), "Debe de estar registrado", Toast.LENGTH_SHORT).show();
                         }
+                        break;
                 }
                 return false;
             }
@@ -397,7 +413,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.O
     //    }
 
     private void initDB() {
-        Common.reservaRoomDatabase = ReservaRoomDatabase.getInstance(this);
+
         Common.favoritoRepository =
             FavoritoRepository.getInstance(
                 FavoritoDataSource.getInstance(

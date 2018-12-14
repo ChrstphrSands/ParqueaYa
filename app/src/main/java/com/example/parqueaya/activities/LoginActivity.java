@@ -39,7 +39,6 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "EmailPassword";
-    //    private static final String TAG_FACE = "FacebookLogin";
     private static final int RC_SIGN_IN = 9001;
 
     private TextView signUp;

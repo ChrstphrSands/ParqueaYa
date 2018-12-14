@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="270dp"
-        android:background="@color/indigo_600">
+        android:background="@color/red_400">
 
         <ImageView
             android:layout_width="match_parent"
@@ -416,12 +416,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/spacing_middle"/>
 
+            <!--<Button-->
+                <!--android:layout_gravity="center"-->
+                <!--android:text="G U A R D A R"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:id="@+id/guardar"/>-->
             <Button
-                android:layout_gravity="center"
-                android:text="G U A R D A R"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/guardar"/>
+                android:id="@+id/guardar"
+                style="@style/ButtonOrange"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:textSize="16dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="30dp"
+                android:onClick="onClick"
+                android:text="Confirmar Reserva"
+                android:textAllCaps="false"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="10dp"/>
 
 
 

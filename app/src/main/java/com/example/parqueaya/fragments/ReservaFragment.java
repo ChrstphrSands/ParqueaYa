@@ -58,6 +58,7 @@ public class ReservaFragment extends Fragment {
     private FirebaseAuth.AuthStateListener authStateListener;
 
     private ParkingApi parkingApi;
+    private Reserva reservas;
 
     public ReservaFragment() {
         // Required empty public constructor
@@ -72,7 +73,7 @@ public class ReservaFragment extends Fragment {
         cochera = (Cochera) getArguments().getSerializable("cochera");
         Log.d("Cochera: ", String.valueOf(cochera));
         initComponents(view);
-        setServicio();
+        getServicios();
         authFirebase(view);
         setDate();
 
@@ -160,7 +161,7 @@ public class ReservaFragment extends Fragment {
                                     cliente_nombre.setText(String.format("%s %s", cliente.getNombre(), cliente.getApellido()));
                                     vehiculos = cliente.getVehiculos();
                                     Log.d("Vehiculo", String.valueOf(vehiculos));
-                                    setVehiculos(vehiculos, view);
+                                    getCliente(vehiculos, view);
                                 }
                             }
                         }
@@ -178,7 +179,7 @@ public class ReservaFragment extends Fragment {
         };
     }
 
-    private void setServicio() {
+    private void getServicios() {
         assert cochera != null;
         ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
         Call<List<Servicio>> call = parkingApi.getServicios(cochera.getCocheraId());
@@ -203,7 +204,7 @@ public class ReservaFragment extends Fragment {
         });
     }
 
-    private void setVehiculos(final List<Vehiculo> vehiculos, View view) {
+    private void getCliente(final List<Vehiculo> vehiculos, View view) {
         for (int i = 0; i < vehiculos.size(); i++) {
             listVehiculos.add(String.valueOf(vehiculos.get(i).getPlaca()));
         }
@@ -257,10 +258,10 @@ public class ReservaFragment extends Fragment {
                 calendar.set(Calendar.AM_PM, calendar.get(Calendar.AM_PM));
                 salida = calendar.getTimeInMillis();
                 textView.setText(Tools.getFormattedTimeEvent(salida));
-                String time = String.valueOf(setTimeAprox(salida, entrada));
+                String time = String.valueOf(setTiempoAproximado(salida, entrada));
                 tiempo_aproximado.setText(time + " minutos");
 
-                String price = String.valueOf(setPrice(servicios.get(0).getCosto(), time));
+                String price = String.valueOf(setPrecio(servicios.get(0).getCosto(), time));
                 precio_aproximado.setText(price);
             }
         }, cur_calender.get(Calendar.HOUR_OF_DAY), cur_calender.get(Calendar.MINUTE), true);
@@ -269,7 +270,7 @@ public class ReservaFragment extends Fragment {
         datePicker.show(getActivity().getFragmentManager(), "Timepickerdialog");
     }
 
-    private String setPrice(Double costo, String time) {
+    private String setPrecio(Double costo, String time) {
         double minute = Math.abs(costo / 60);
         double price = minute * Double.parseDouble(time);
         return String.format("%.2f", price);
@@ -295,7 +296,7 @@ public class ReservaFragment extends Fragment {
         return newFormat.format(new Date(time));
     }
 
-    public Long setTimeAprox(long date1, long date2) {
+    public Long setTiempoAproximado(long date1, long date2) {
         long diferencia = (Math.abs(date1 - date2)) / 1000 / 60;
         return diferencia;
     }
@@ -319,8 +320,8 @@ public class ReservaFragment extends Fragment {
             @Override
             public void onResponse(Call<Reserva> call, Response<Reserva> response) {
                 if (response != null) {
-                    Reserva reserva = response.body();
-                    ((MyApplication)getActivity().getApplicationContext()).setReservaId(reserva.getId());
+//                    reservaId = response.body().getId();
+//                    ((MyApplication)getActivity().getApplicationContext()).setReservaId(reservaId);
                 }
             }
 

@@ -2,7 +2,6 @@ package com.example.parqueaya.adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,23 +31,25 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Item
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView image;
-        private TextView favorito_nombre;
-        private TextView favorito_direccion;
-        private TextView favorito_precio;
-        private CardView eliminar;
-        private TextView favorito_id;
+        private TextView clienteNombre;
+        private TextView nombreCochera;
+        private TextView historialFecha;
+        private TextView historialPrecio;
+        private TextView historialPlaca;
+        private TextView historialTiempo;
+
 
         public ItemViewHolder(final View itemView) {
             super(itemView);
 
             itemView.setOnClickListener(this);
 
-            image = itemView.findViewById(R.id.imageMain);
-            favorito_nombre = itemView.findViewById(R.id.favorito_nombre);
-            favorito_direccion = itemView.findViewById(R.id.favorito_direccion);
-            favorito_precio = itemView.findViewById(R.id.favorito_costo);
-            eliminar = itemView.findViewById(R.id.favorito_eliminar);
-            favorito_id = itemView.findViewById(R.id.favorito_id);
+//            clienteNombre = itemView.findViewById(R.id.cliente_nombre);
+            nombreCochera = itemView.findViewById(R.id.nombre_cochera);
+            historialFecha = itemView.findViewById(R.id.historial_fecha);
+            historialPrecio = itemView.findViewById(R.id.historial_precio);
+            historialPlaca = itemView.findViewById(R.id.historial_placa);
+            historialTiempo = itemView.findViewById(R.id.historial_tiempo);
 
             //            eliminar.setOnClickListener(new View.OnClickListener() {
             //                @Override
@@ -78,22 +79,18 @@ public class HistorialAdapter extends RecyclerView.Adapter<HistorialAdapter.Item
     @NonNull
     @Override
     public HistorialAdapter.ItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_favorito, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_historial, parent, false);
         HistorialAdapter.ItemViewHolder itemViewHolder = new HistorialAdapter.ItemViewHolder(view);
         return itemViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull HistorialAdapter.ItemViewHolder holder, int position) {
-        Glide.with(context)
-            .load(URL_FOTO + dataList.get(position).getFoto())
-            .thumbnail(0.01f)
-            .centerCrop()
-            .into(holder.image);
-        holder.favorito_nombre.setText(dataList.get(position).getNombre());
-        holder.favorito_precio.setText(dataList.get(position).getPrecio());
-        holder.favorito_direccion.setText(dataList.get(position).getDireccion());
-        holder.favorito_id.setTextColor(dataList.get(position).getId());
+        holder.nombreCochera.setText(dataList.get(position).getNombre_cochera());
+        holder.historialFecha.setText(dataList.get(position).getFecha_reserva());
+        holder.historialPrecio.setText(dataList.get(position).getTotal());
+        holder.historialTiempo.setText(dataList.get(position).getTiempo_reserva());
+        holder.historialPlaca.setText(dataList.get(position).getPlaca());
 
     }
 

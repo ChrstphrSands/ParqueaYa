@@ -34,6 +34,7 @@
                     android:orientation="vertical">
 
                     <ImageView
+                        android:id="@+id/cliente_foto"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:srcCompat="@drawable/ic_person"/>
@@ -143,6 +144,7 @@
                             android:textColorHint="@color/grey_40">
 
                             <android.support.v7.widget.AppCompatEditText
+                                android:maxLength="8"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="DNI"
@@ -187,6 +189,7 @@
                                 >
 
                                 <android.support.v7.widget.AppCompatEditText
+                                    android:inputType="textEmailAddress"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:hint="Email"
@@ -226,6 +229,7 @@
                             >
 
                             <android.support.v7.widget.AppCompatEditText
+                                android:inputType="phone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Celular"
@@ -263,6 +267,7 @@
                             >
 
                             <android.support.v7.widget.AppCompatEditText
+                                android:inputType="phone"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="Telefono"
@@ -309,6 +314,38 @@
                         </android.support.design.widget.TextInputLayout>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/imageButton3"
+                            android:layout_width="@dimen/spacing_mxlarge"
+                            android:layout_height="@dimen/spacing_mxlarge"
+                            android:layout_marginTop="@dimen/spacing_mlarge"
+                            android:background="@android:color/transparent"
+                            android:tint="@color/grey_60"
+                            app:srcCompat="@drawable/ic_car"/>
+
+                        <View
+                            android:layout_width="@dimen/spacing_large"
+                            android:layout_height="match_parent"/>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColorHint="@color/grey_40">
+
+                            <android.support.v7.widget.AppCompatEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Ingrese la placa de vehiculos separados por coma"
+                                android:id="@+id/cliente_vehiculos"/>
+
+                        </android.support.design.widget.TextInputLayout>
+                    </LinearLayout>
+
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/spacing_large"/>
@@ -331,7 +368,7 @@
             app:layout_anchorGravity="top|end|right"
             app:rippleColor="@android:color/white"
             app:srcCompat="@drawable/ic_check_circle_white_24dp"
-            android:id="@+id/cliente_foto"/>
+            android:id="@+id/cliente_guardar"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.parqueaya.R;
 import com.example.parqueaya.models.Cliente;
@@ -18,6 +20,7 @@ import com.example.parqueaya.services.DataService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ClientEdiFragment extends Fragment implements View.OnClickListener {
 
@@ -97,26 +100,54 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
         cliente_vehiculos.setText(vehiculos);
     }
 
-    private void saveData() {
+    private boolean saveData() {
 
-        String nombre = String.valueOf(cliente_nombre.getText());
-        String apellido = String.valueOf(cliente_apellido.getText());
-        int dni = Integer.parseInt(String.valueOf(cliente_dni.getText()));
-        String email = String.valueOf(cliente_email.getText());
-        int celular = Integer.parseInt(String.valueOf(cliente_celular.getText()));
-        int telefono = Integer.parseInt(String.valueOf(cliente_telefono.getText()));
-        String direccion = String.valueOf(cliente_direccion.getText());
-        List<Vehiculo> vehiculos = new ArrayList<>();
+        int mDni;
+        String email;
 
-        String placas = String.valueOf(cliente_vehiculos.getText());
-        Log.d("Vehiculoss", placas);
+        mDni = cliente_dni.getText().length();
+        email = String.valueOf(cliente_email.getText());
 
-        saveVehiculos(placas);
+        if (validarDatos(mDni, email)) {
+            int dni = Integer.parseInt(String.valueOf(cliente_dni.getText()));
+            String nombre = String.valueOf(cliente_nombre.getText());
+            String apellido = String.valueOf(cliente_apellido.getText());
+            int celular = Integer.parseInt(String.valueOf(cliente_celular.getText()));
+            int telefono = Integer.parseInt(String.valueOf(cliente_telefono.getText()));
+            String direccion = String.valueOf(cliente_direccion.getText());
+            List<Vehiculo> vehiculos = new ArrayList<>();
 
-        cliente = new Cliente(cliente.getCliente_id(), apellido, direccion, celular, telefono, nombre, dni, email, uid);
-        Log.d("Cliente", String.valueOf(cliente));
+            String placas = String.valueOf(cliente_vehiculos.getText());
+            Log.d("Vehiculoss", placas);
 
-        DataService.getInstance().updateCliente(cliente.getCliente_id(), cliente);
+            saveVehiculos(placas);
+
+            cliente = new Cliente(cliente.getCliente_id(), apellido, direccion, celular, telefono, nombre, dni, email, uid);
+            Log.d("Cliente", String.valueOf(cliente));
+
+            DataService.getInstance().updateCliente(cliente.getCliente_id(), cliente);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean validarEmail(String email) {
+        Pattern pattern = Patterns.EMAIL_ADDRESS;
+        return pattern.matcher(email).matches();
+    }
+
+    private boolean validarDatos(int dni, String email) {
+        if (dni < 8) {
+            Toast.makeText(getContext(), "El DNI debe tener 8 caracteres", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!validarEmail(email)) {
+            Toast.makeText(getContext(), "Debe de ingresar un correo valido", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     private void saveVehiculos(String vehiculos) {
@@ -128,20 +159,19 @@ public class ClientEdiFragment extends Fragment implements View.OnClickListener 
             vehiculo = new Vehiculo(list.get(i), 4, cliente.getCliente_id());
             DataService.getInstance().setVehiculo(vehiculo);
         }
-
-
     }
 
     @Override
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.cliente_guardar) {
-            saveData();
-            ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
-            getActivity().getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, clientDetailFragment)
-                .addToBackStack(null)
-                .commit();
+            if (saveData()) {
+                ClientDetailFragment clientDetailFragment = new ClientDetailFragment();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container, clientDetailFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     }
 }

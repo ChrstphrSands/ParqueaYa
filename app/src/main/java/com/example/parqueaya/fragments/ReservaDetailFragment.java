@@ -119,21 +119,9 @@ public class ReservaDetailFragment extends Fragment {
         detalleFecha.setText(fecha);
         detallePlaca.setText(placa);
         detalleCosto.setText(costo);
-//        detalleEstado.setText(String.valueOf(reserva.getReservaEstadoId()));
         detalleCliente.setText(nombre);
-        generateQr();
     }
 
-    private void generateQr() {
-        qrgEncoder = new QRGEncoder("Hola", null, QRGContents.Type.TEXT, 150);
-
-        try {
-            bitmap = qrgEncoder.encodeAsBitmap();
-            detalleQr.setImageBitmap(bitmap);
-        } catch (WriterException e) {
-            e.printStackTrace();
-        }
-    }
 
     private void getCliente() {
         ParkingApi parkingApi = RetrofitInstance.createService(ParkingApi.class);
@@ -146,6 +134,18 @@ public class ReservaDetailFragment extends Fragment {
             public void onResponse(Call<Cliente> call, Response<Cliente> response) {
                 if (response.isSuccessful() && response.code() == 200) {
                     cliente = response.body();
+                    String placa = ((MyApplication) getActivity().getApplicationContext()).getPlaca();
+                    String qr = "Cliente: " + cliente.getNombre() + "\n" +
+                            "DNI: " + cliente.getDNI() + "\n" +
+                            "Placa: " + placa;
+                    qrgEncoder = new QRGEncoder(qr, null, QRGContents.Type.TEXT, 150);
+
+                    try {
+                        bitmap = qrgEncoder.encodeAsBitmap();
+                        detalleQr.setImageBitmap(bitmap);
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 

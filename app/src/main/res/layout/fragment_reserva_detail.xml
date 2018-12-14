@@ -73,7 +73,6 @@
                         android:id="@+id/detalle_reserva_qr"
                         android:layout_width="150dp"
                         android:layout_height="150dp"
-                        android:src="@mipmap/ic_diamond"
                         android:contentDescription="QR"/>
 
                     <View

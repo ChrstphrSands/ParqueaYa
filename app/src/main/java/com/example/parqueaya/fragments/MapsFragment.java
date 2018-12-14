@@ -53,15 +53,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
     private Cochera cochera;
     private List<Cochera> cocheras;
 
-    int location = -1;
-
-
     LocationManager locationManager;
     private SupportMapFragment mapFragment;
     private MapView mMapView;
     private GoogleMap mMap;
     private MarkerOptions userMarker;
-
 
     private boolean mPermissionDenied = false;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
@@ -182,19 +178,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback {
             mMap.setMyLocationEnabled(true);
         }
     }
-
-
-
-    //    @Override
-    //    public boolean onMyLocationButtonClick() {
-    //        Toast.makeText(context,"My location button clicked", Toast.LENGTH_LONG).show();
-    //        return false;
-    //    }
-    //
-    //    @Override
-    //    public void onMyLocationClick(@NonNull Location location) {
-    //        Toast.makeText(context,"Current location:\n" + location, Toast.LENGTH_LONG).show();
-    //    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
